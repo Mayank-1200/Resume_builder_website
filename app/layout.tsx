@@ -4,9 +4,9 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Resume Builder',
+  description: 'Created with vibe coding',
+  generator: 'N/A',
 }
 
 export default function RootLayout({
