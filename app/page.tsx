@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link";
 import {
   ArrowRight,
   CheckCircle,
@@ -566,12 +567,16 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="hover:text-[rgb(0,135,158)]">
-                Login
-              </Button>
-              <Button className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)]">
-                Sign Up
-              </Button>
+              <Link href="/login">
+                <Button variant="ghost" className="hover:text-[rgb(0,135,158)]">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)]">
+                  Sign Up
+                </Button>
+              </Link>
             </div>
           </nav>
         </div>
@@ -894,7 +899,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-[rgb(0,135,158)] mt-12 pt-8 text-center text-[rgb(255,171,91)]">
-            <p>&copy; 2024 ResumeBuilder. All rights reserved.</p>
+            <p>&copy; 2025 ResumeBuilder. All rights reserved.</p>
           </div>
         </div>
       </footer>
