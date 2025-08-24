@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { motion, useScroll, useTransform, AnimatePresence, animate } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +26,24 @@ import {
   GraduationCap,
 } from "lucide-react"
 
+
 const typingTexts = ["Software Engineer", "Data Analyst", "Designer", "Marketing Manager", "Product Manager"]
+
+// Auth state hook
+function useAuth() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(!!localStorage.getItem('jwt_token'));
+    }
+  }, []);
+  const logout = () => {
+    localStorage.removeItem('jwt_token');
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
+  return { isLoggedIn, logout };
+}
 
 // First Resume Design - Professional
 const ProfessionalResume = () => {
@@ -42,10 +59,10 @@ const ProfessionalResume = () => {
 
     const skillTimer = setTimeout(() => {
       setSkillProgress({
-        JavaScript: 90,
-        React: 85,
-        Python: 80,
-        Design: 75,
+        "JavaScript": 90,
+        "React": 85,
+        "Node.js": 80,
+        "TypeScript": 75,
       })
     }, 2200)
 
@@ -61,90 +78,7 @@ const ProfessionalResume = () => {
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{
-          opacity: visibleSections.includes("header") ? 1 : 0,
-          y: visibleSections.includes("header") ? 0 : -20,
-        }}
-        transition={{ duration: 0.6 }}
-        className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] text-white p-6"
-      >
-        <h1 className="text-2xl font-bold mb-2">Sarah Johnson</h1>
-        <p className="text-[rgb(255,171,91)] mb-3">Senior Software Engineer</p>
-        <div className="space-y-1 text-sm">
-          <div className="flex items-center space-x-2">
-            <Mail className="w-3 h-3" />
-            <span>sarah.johnson@email.com</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Phone className="w-3 h-3" />
-            <span>+1 (555) 123-4567</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <MapPin className="w-3 h-3" />
-            <span>San Francisco, CA</span>
-          </div>
-        </div>
-      </motion.div>
-
       <div className="p-6 space-y-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{
-            opacity: visibleSections.includes("summary") ? 1 : 0,
-            x: visibleSections.includes("summary") ? 0 : -20,
-          }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-lg font-semibold text-[rgb(0,48,146)] mb-2 border-b-2 border-[rgb(255,171,91)] pb-1">
-            Professional Summary
-          </h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            Experienced software engineer with 5+ years developing scalable web applications. Passionate about creating
-            user-friendly solutions.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{
-            opacity: visibleSections.includes("experience") ? 1 : 0,
-            x: visibleSections.includes("experience") ? 0 : -20,
-          }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-lg font-semibold text-[rgb(0,48,146)] mb-3 border-b-2 border-[rgb(255,171,91)] pb-1">
-            Experience
-          </h2>
-          <div className="space-y-3">
-            <div>
-              <h3 className="font-semibold text-sm text-[rgb(0,135,158)]">Senior Software Engineer</h3>
-              <p className="text-xs text-gray-500 mb-1">TechCorp Inc. • 2021 - Present</p>
-              <ul className="text-xs text-gray-600 space-y-1">
-                <motion.li
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: visibleSections.includes("experience") ? 1 : 0 }}
-                  transition={{ delay: 0.3, duration: 0.4 }}
-                  className="flex items-start space-x-1"
-                >
-                  <span className="w-1 h-1 bg-[rgb(255,171,91)] rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Led development of React-based dashboard</span>
-                </motion.li>
-                <motion.li
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: visibleSections.includes("experience") ? 1 : 0 }}
-                  transition={{ delay: 0.5, duration: 0.4 }}
-                  className="flex items-start space-x-1"
-                >
-                  <span className="w-1 h-1 bg-[rgb(255,171,91)] rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Improved application performance by 40%</span>
-                </motion.li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
-
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{
@@ -543,44 +477,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-[rgb(0,48,146)]">ResumeBuilder</span>
-            </div>
-
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Resume
-              </a>
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Resources
-              </a>
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Pricing
-              </a>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <Link href="/login">
-                <Button variant="ghost" className="hover:text-[rgb(0,135,158)]">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)]">
-                  Sign Up
-                </Button>
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
+  {/* Header removed: now handled globally by Navbar component */}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 lg:py-20">
@@ -820,89 +717,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[rgb(0,48,146)] text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-[rgb(0,135,158)] to-[rgb(255,171,91)] rounded-lg flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">ResumeBuilder</span>
-              </div>
-              <p className="text-[rgb(255,171,91)]">Create professional resumes that get you hired.</p>
-            </div>
 
-            <div>
-              <h4 className="font-semibold mb-4">Job Seekers</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Create Resume
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Resume Designs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Resume Templates
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Terms and Services
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Our Company</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-[rgb(0,135,158)] mt-12 pt-8 text-center text-[rgb(255,171,91)]">
-            <p>&copy; 2025 ResumeBuilder. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
 
       {/* Chat Support Bubble */}
       <div className="fixed bottom-6 right-6 z-50">

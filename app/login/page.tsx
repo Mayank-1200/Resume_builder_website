@@ -16,10 +16,28 @@ export default function LoginPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login Data:', form);
-    // Handle email login logic here
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.token) {
+          localStorage.setItem('jwt_token', data.token);
+        }
+  alert('Login successful!');
+  window.location.href = '/';
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Login failed!');
+      }
+    } catch (error) {
+      alert('An error occurred!');
+    }
   };
 
   const handleGoogleLogin = () => {
