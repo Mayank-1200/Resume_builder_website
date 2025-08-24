@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 
+
 export default function SignUpPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -15,10 +18,27 @@ export default function SignUpPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleEmailSignup = (e: React.FormEvent) => {
+  const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Email Signup Data:', form);
-    // Handle email signup logic here
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.token) {
+          localStorage.setItem('jwt_token', data.token);
+        }
+  alert('Signup successful!');
+  window.location.href = '/';
+      } else {
+        alert('Signup failed!');
+      }
+    } catch (error) {
+      alert('An error occurred!');
+    }
   };
 
   const handleGoogleSignup = () => {
@@ -26,6 +46,7 @@ export default function SignUpPage() {
     // Handle Google OAuth here
   };
 
+  
   return (
     <div className="min-h-screen bg-gradient-to-tr from-blue-100 via-white to-purple-100 flex items-center justify-center px-4">
       <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-10 space-y-6">
