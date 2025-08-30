@@ -25,25 +25,12 @@ import {
   Briefcase,
   GraduationCap,
 } from "lucide-react"
+import Image from "next/image";
 
 
 const typingTexts = ["Software Engineer", "Data Analyst", "Designer", "Marketing Manager", "Product Manager"]
 
-// Auth state hook
-function useAuth() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsLoggedIn(!!localStorage.getItem('jwt_token'));
-    }
-  }, []);
-  const logout = () => {
-    localStorage.removeItem('jwt_token');
-    setIsLoggedIn(false);
-    window.location.reload();
-  };
-  return { isLoggedIn, logout };
-}
+
 
 // First Resume Design - Professional
 const ProfessionalResume = () => {
@@ -372,11 +359,22 @@ export default function LandingPage() {
   const [displayText, setDisplayText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
   const [showChat, setShowChat] = useState(false)
+  const [isPageReady, setIsPageReady] = useState(false)
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], [0, -50])
 
+  // Set page as ready after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Typing animation effect
   useEffect(() => {
+    if (!isPageReady) return;
+    
     const currentFullText = typingTexts[currentTextIndex]
     const timeout = setTimeout(
       () => {
@@ -388,7 +386,7 @@ export default function LandingPage() {
           }
         } else {
           if (displayText.length > 0) {
-            setDisplayText(displayText.slice(0, -1))
+            setDisplayText(currentFullText.slice(0, -1))
           } else {
             setIsDeleting(false)
             setCurrentTextIndex((prev) => (prev + 1) % typingTexts.length)
@@ -399,7 +397,19 @@ export default function LandingPage() {
     )
 
     return () => clearTimeout(timeout)
-  }, [displayText, isDeleting, currentTextIndex])
+  }, [displayText, isDeleting, currentTextIndex, isPageReady])
+
+  // Show loading state until page is ready
+  if (!isPageReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[rgb(0,48,146)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[rgb(0,48,146)] text-lg font-semibold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const benefits = [
     {
@@ -623,11 +633,16 @@ export default function LandingPage() {
                 className="cursor-pointer"
               >
                 <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-[rgb(255,171,91)]/20">
-                  <div className="aspect-[3/4] overflow-hidden">
-                    <img
+                  <div className="aspect-[3/4] overflow-hidden relative">
+                    <Image
                       src={resume.image || "/placeholder.svg"}
                       alt={resume.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 25vw"
+                      priority={index < 2}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     />
                   </div>
                   <CardContent className="p-4">

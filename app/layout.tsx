@@ -1,39 +1,43 @@
-import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
-import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { NextAuthProvider } from "./providers";
+import Navbar from "@/components/Navbar";
+import { Suspense } from "react";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Resume Builder',
-  description: 'Created with vibe coding',
-  generator: 'N/A',
+  title: "Resume Builder - Create Professional Resumes",
+  description: "Build stunning, ATS-friendly resumes with our intuitive drag-and-drop editor. Choose from professional templates and land more interviews.",
+};
+
+function LoadingSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-[rgb(0,48,146)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-[rgb(0,48,146)] text-lg font-semibold">Loading Resume Builder...</p>
+      </div>
+    </div>
+  );
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
-      <body className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+      <body className={inter.className}>
+        <NextAuthProvider>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Navbar />
+            {children}
+          </Suspense>
+        </NextAuthProvider>
       </body>
     </html>
-  )
+  );
 }
