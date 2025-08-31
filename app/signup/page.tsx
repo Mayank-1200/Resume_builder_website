@@ -7,7 +7,11 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function SignUpPage() {
   const router = useRouter();
+<<<<<<< HEAD
   const { login, user, isLoading: authLoading } = useAuth();
+=======
+  const { login } = useAuth();
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -58,6 +62,7 @@ export default function SignUpPage() {
 
       if (res.ok) {
         if (data.token) {
+<<<<<<< HEAD
           console.log('Signup successful, calling login function...');
           await login(data.token);
           console.log('Login function completed, redirecting to:', getRedirectUrl()+'/dashboard');
@@ -88,6 +93,16 @@ export default function SignUpPage() {
               window.location.href = redirectUrl;
             }
           }, 200);
+=======
+          login(data.token);
+          alert('Signup successful!');
+          // Redirect back to the appropriate URL
+          router.push(getRedirectUrl());
+        } else {
+          alert('Signup successful!');
+          // Redirect back to the appropriate URL
+          router.push(getRedirectUrl());
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
         }
       } else {
         setError(data.error || 'Signup failed!');
@@ -102,6 +117,7 @@ export default function SignUpPage() {
   const handleGoogleSignup = async () => {
     try {
       // Get the redirect URL
+<<<<<<< HEAD
       const redirectUrl = getRedirectUrl()+'/dashboard';
       console.log('Google signup initiated, redirect URL:', redirectUrl);
       
@@ -126,6 +142,21 @@ export default function SignUpPage() {
         setError('Failed to sign in with Google');
       });
       
+=======
+      const redirectUrl = getRedirectUrl();
+      
+      const result = await signIn('google', {
+        callbackUrl: redirectUrl,
+        redirect: false
+      });
+
+      if (result?.error) {
+        setError('Google signup failed. Please try again.');
+      } else if (result?.ok) {
+        // Redirect back to the appropriate URL
+        router.push(redirectUrl);
+      }
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
     } catch (error) {
       console.error('Google sign in error:', error);
       setError('Failed to sign in with Google');
@@ -213,7 +244,11 @@ export default function SignUpPage() {
 
         <p className="text-center text-gray-500 text-sm">
           Already have an account?{' '}
+<<<<<<< HEAD
           <a href={`/login?redirect=${encodeURIComponent(getRedirectUrl()+'/dashboard')}`} className="text-blue-600 hover:text-blue-700 font-medium">
+=======
+          <a href={`/login?redirect=${encodeURIComponent(getRedirectUrl())}`} className="text-blue-600 hover:text-blue-700 font-medium">
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
             Log in
           </a>
         </p>

@@ -57,6 +57,7 @@ export default function LoginPage() {
 
       if (res.ok) {
         if (data.token) {
+<<<<<<< HEAD
           console.log('Login successful, calling login function...');
           await login(data.token);
           console.log('Login function completed, redirecting to:', getRedirectUrl()+'/dashboard');
@@ -87,6 +88,16 @@ export default function LoginPage() {
               window.location.href = redirectUrl;
             }
           }, 200);
+=======
+          login(data.token);
+          alert('Login successful!');
+          // Redirect back to the appropriate URL
+          router.push(getRedirectUrl());
+        } else {
+          alert('Login successful!');
+          // Redirect back to the appropriate URL
+          router.push(getRedirectUrl());
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
         }
       } else {
         setError(data.error || 'Login failed!');
@@ -101,6 +112,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       // Get the redirect URL
+<<<<<<< HEAD
       const redirectUrl = getRedirectUrl()+'/dashboard';
       console.log('Google login initiated, redirect URL:', redirectUrl);
       
@@ -125,6 +137,21 @@ export default function LoginPage() {
         setError('Failed to login with Google');
       });
       
+=======
+      const redirectUrl = getRedirectUrl();
+      
+      const result = await signIn('google', {
+        callbackUrl: redirectUrl,
+        redirect: false
+      });
+
+      if (result?.error) {
+        setError('Google login failed. Please try again.');
+      } else if (result?.ok) {
+        // Redirect back to the appropriate URL
+        router.push(redirectUrl);
+      }
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
     } catch (error) {
       console.error('Google Login error:', error);
       setError('Failed to login with Google');
@@ -189,7 +216,11 @@ export default function LoginPage() {
 
         <p className="text-center text-gray-500 text-sm">
           Don't have an account?{' '}
+<<<<<<< HEAD
           <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl()+'/dashboard')}`} className="text-blue-600 hover:text-blue-700 font-medium">
+=======
+          <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl())}`} className="text-blue-600 hover:text-blue-700 font-medium">
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
             Sign up
           </a>
         </p>

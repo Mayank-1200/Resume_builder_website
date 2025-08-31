@@ -26,7 +26,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /lib/generated/prisma
+<<<<<<< HEAD
 
 # Google OAuth credentials
 client_secret_*.json
 *.json
+=======
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763

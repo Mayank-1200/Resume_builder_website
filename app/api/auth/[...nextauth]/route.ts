@@ -21,6 +21,7 @@ const handler = NextAuth({
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+<<<<<<< HEAD
   pages: {
     signIn: '/login',
     error: '/login',
@@ -85,6 +86,8 @@ const handler = NextAuth({
       return baseUrl;
     },
   },
+=======
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
@@ -113,6 +116,39 @@ const handler = NextAuth({
       },
     },
   },
+<<<<<<< HEAD
+=======
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.firstName = (user as any).firstName;
+        token.lastName = (user as any).lastName;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.firstName = token.firstName as string;
+        session.user.lastName = token.lastName as string;
+      }
+      return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Allow relative URLs and URLs from the same origin
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      
+      // Default to base URL if external
+      return baseUrl;
+    },
+  },
+      pages: {
+      signIn: '/login',
+      error: '/login',
+    },
+>>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
   debug: process.env.NODE_ENV === 'development',
 });
 
