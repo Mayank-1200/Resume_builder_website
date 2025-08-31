@@ -57,14 +57,36 @@ export default function LoginPage() {
 
       if (res.ok) {
         if (data.token) {
-          login(data.token);
+          console.log('Login successful, calling login function...');
+          await login(data.token);
+          console.log('Login function completed, redirecting to:', getRedirectUrl()+'/dashboard');
           alert('Login successful!');
           // Redirect back to the appropriate URL
-          router.push(getRedirectUrl());
+          const redirectUrl = getRedirectUrl()+'/dashboard';
+          console.log('Attempting to navigate to:', redirectUrl);
+          
+          // Try router.push first
+          router.push(redirectUrl);
+          
+          // Fallback: if router.push doesn't work, use window.location
+          setTimeout(() => {
+            if (typeof window !== 'undefined' && window.location.pathname !== redirectUrl) {
+              console.log('Fallback navigation to:', redirectUrl);
+              window.location.href = redirectUrl;
+            }
+          }, 500); // Increased timeout for more reliability
         } else {
           alert('Login successful!');
           // Redirect back to the appropriate URL
-          router.push(getRedirectUrl());
+          const redirectUrl = getRedirectUrl()+'/dashboard';
+          router.push(redirectUrl);
+          
+          // Fallback: if router.push doesn't work, use window.location
+          setTimeout(() => {
+            if (typeof window !== 'undefined' && window.location.pathname !== redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          }, 200);
         }
       } else {
         setError(data.error || 'Login failed!');
@@ -79,19 +101,30 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       // Get the redirect URL
-      const redirectUrl = getRedirectUrl();
+      const redirectUrl = getRedirectUrl()+'/dashboard';
+      console.log('Google login initiated, redirect URL:', redirectUrl);
       
-      const result = await signIn('google', {
+      // For Google OAuth, we'll use a direct approach
+      // Start the OAuth flow and then navigate directly
+      signIn('google', {
         callbackUrl: redirectUrl,
         redirect: false
+      }).then((result) => {
+        console.log('Google OAuth result:', result);
+        
+        if (result?.ok) {
+          console.log('Google OAuth successful, navigating to dashboard');
+          // Navigate directly to dashboard
+          window.location.href = redirectUrl;
+        } else if (result?.error) {
+          console.error('Google OAuth error:', result.error);
+          setError('Google login failed. Please try again.');
+        }
+      }).catch((error) => {
+        console.error('Google OAuth error:', error);
+        setError('Failed to login with Google');
       });
-
-      if (result?.error) {
-        setError('Google login failed. Please try again.');
-      } else if (result?.ok) {
-        // Redirect back to the appropriate URL
-        router.push(redirectUrl);
-      }
+      
     } catch (error) {
       console.error('Google Login error:', error);
       setError('Failed to login with Google');
@@ -156,7 +189,7 @@ export default function LoginPage() {
 
         <p className="text-center text-gray-500 text-sm">
           Don't have an account?{' '}
-          <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl())}`} className="text-blue-600 hover:text-blue-700 font-medium">
+          <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl()+'/dashboard')}`} className="text-blue-600 hover:text-blue-700 font-medium">
             Sign up
           </a>
         </p>
