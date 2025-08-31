@@ -59,11 +59,7 @@ function RingStat({ label, value }: { label: string; value: number }) {
 
 export default function DashboardPage() {
   const router = useRouter()
-<<<<<<< HEAD
   const { user, isLoading, isHydrated } = useAuth()
-=======
-  const { user, isLoading } = useAuth()
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
 
   // Updated dataset: removed views and downloads
   const recentResumes = useMemo(
@@ -94,49 +90,20 @@ export default function DashboardPage() {
   )
 
   useEffect(() => {
-<<<<<<< HEAD
-    console.log('Dashboard auth check:', { 
-      isLoading, 
-      user: !!user, 
-      userDetails: user, 
-      isHydrated,
-      currentPath: typeof window !== 'undefined' ? window.location.pathname : 'unknown'
-    });
-    
     if (!isHydrated) {
-      console.log('Auth context not hydrated yet, waiting...');
       return;
     }
     
     if (isLoading) {
-      console.log('Still loading, waiting...');
       return;
     }
     
     if (!user) {
-      console.log('No user found, redirecting to login');
-      // Use a small delay to ensure the auth state is properly checked
-      const timer = setTimeout(() => {
-        if (!user) {
-          console.log('Redirecting to login page');
-          router.replace(`/login?redirect=${encodeURIComponent("/dashboard")}`);
-        }
-      }, 200); // Increased delay for more reliability
-      
-      return () => clearTimeout(timer);
-    } else {
-      console.log('User authenticated, showing dashboard');
+      router.replace(`/login?redirect=${encodeURIComponent("/dashboard")}`);
     }
   }, [isLoading, user, router, isHydrated])
 
   if (isLoading || !isHydrated) {
-=======
-    if (isLoading) return
-    if (!user) router.replace(`/login?redirect=${encodeURIComponent("/dashboard")}`)
-  }, [isLoading, user, router])
-
-  if (isLoading) {
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
     return (
       <div className="min-h-[60vh] grid place-items-center">
         <div className="text-center">
@@ -180,14 +147,10 @@ export default function DashboardPage() {
               </div>
               <h3 className="text-xl font-bold mb-3">Start Fresh</h3>
               <p className="text-emerald-100 mb-5 text-base leading-relaxed">Create a new resume from scratch with our professional templates and step-by-step guidance</p>
-<<<<<<< HEAD
               <Button 
                 onClick={() => router.push('/create-resume')}
                 className="w-full bg-white text-emerald-600 hover:bg-emerald-50 text-base py-2.5 font-semibold"
               >
-=======
-              <Button className="w-full bg-white text-emerald-600 hover:bg-emerald-50 text-base py-2.5 font-semibold">
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
                 Create Resume
               </Button>
             </div>
@@ -221,15 +184,11 @@ export default function DashboardPage() {
               <p className="text-sm opacity-90">Product Designer – Creative • last edited 1 day ago</p>
             </div>
           </div>
-<<<<<<< HEAD
           <Button 
             onClick={() => router.push('/create-resume')}
             variant="secondary" 
             className="bg-white text-slate-800 hover:bg-amber-50"
           >
-=======
-          <Button variant="secondary" className="bg-white text-slate-800 hover:bg-amber-50">
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
             Resume Editor
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
@@ -284,15 +243,11 @@ export default function DashboardPage() {
                         <span>Updated {r.updatedAt}</span>
                       </div>
                       <div className="flex gap-2">
-<<<<<<< HEAD
                         <Button 
                           onClick={() => router.push('/create-resume')}
                           size="sm" 
                           className="bg-slate-800 hover:bg-teal-700 transition-all duration-200 shadow-sm hover:shadow-md"
                         >
-=======
-                        <Button size="sm" className="bg-slate-800 hover:bg-teal-700 transition-all duration-200 shadow-sm hover:shadow-md">
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
                           Edit
                         </Button>
                         <Button
@@ -344,16 +299,12 @@ export default function DashboardPage() {
                   <p>Consider adding recent projects to stay current</p>
                 </div>
               </div>
-<<<<<<< HEAD
               <Button 
                 onClick={() => router.push('/create-resume')}
                 size="sm" 
                 variant="outline" 
                 className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100 transition-colors duration-200"
               >
-=======
-              <Button size="sm" variant="outline" className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100 transition-colors duration-200">
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
                 Update Now
               </Button>
             </CardContent>

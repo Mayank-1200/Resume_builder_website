@@ -57,47 +57,16 @@ export default function LoginPage() {
 
       if (res.ok) {
         if (data.token) {
-<<<<<<< HEAD
-          console.log('Login successful, calling login function...');
           await login(data.token);
-          console.log('Login function completed, redirecting to:', getRedirectUrl()+'/dashboard');
           alert('Login successful!');
-          // Redirect back to the appropriate URL
-          const redirectUrl = getRedirectUrl()+'/dashboard';
-          console.log('Attempting to navigate to:', redirectUrl);
-          
-          // Try router.push first
+          // Redirect to the appropriate URL
+          const redirectUrl = getRedirectUrl();
           router.push(redirectUrl);
-          
-          // Fallback: if router.push doesn't work, use window.location
-          setTimeout(() => {
-            if (typeof window !== 'undefined' && window.location.pathname !== redirectUrl) {
-              console.log('Fallback navigation to:', redirectUrl);
-              window.location.href = redirectUrl;
-            }
-          }, 500); // Increased timeout for more reliability
         } else {
           alert('Login successful!');
-          // Redirect back to the appropriate URL
-          const redirectUrl = getRedirectUrl()+'/dashboard';
+          // Redirect to the appropriate URL
+          const redirectUrl = getRedirectUrl();
           router.push(redirectUrl);
-          
-          // Fallback: if router.push doesn't work, use window.location
-          setTimeout(() => {
-            if (typeof window !== 'undefined' && window.location.pathname !== redirectUrl) {
-              window.location.href = redirectUrl;
-            }
-          }, 200);
-=======
-          login(data.token);
-          alert('Login successful!');
-          // Redirect back to the appropriate URL
-          router.push(getRedirectUrl());
-        } else {
-          alert('Login successful!');
-          // Redirect back to the appropriate URL
-          router.push(getRedirectUrl());
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
         }
       } else {
         setError(data.error || 'Login failed!');
@@ -112,32 +81,6 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       // Get the redirect URL
-<<<<<<< HEAD
-      const redirectUrl = getRedirectUrl()+'/dashboard';
-      console.log('Google login initiated, redirect URL:', redirectUrl);
-      
-      // For Google OAuth, we'll use a direct approach
-      // Start the OAuth flow and then navigate directly
-      signIn('google', {
-        callbackUrl: redirectUrl,
-        redirect: false
-      }).then((result) => {
-        console.log('Google OAuth result:', result);
-        
-        if (result?.ok) {
-          console.log('Google OAuth successful, navigating to dashboard');
-          // Navigate directly to dashboard
-          window.location.href = redirectUrl;
-        } else if (result?.error) {
-          console.error('Google OAuth error:', result.error);
-          setError('Google login failed. Please try again.');
-        }
-      }).catch((error) => {
-        console.error('Google OAuth error:', error);
-        setError('Failed to login with Google');
-      });
-      
-=======
       const redirectUrl = getRedirectUrl();
       
       const result = await signIn('google', {
@@ -151,7 +94,6 @@ export default function LoginPage() {
         // Redirect back to the appropriate URL
         router.push(redirectUrl);
       }
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
     } catch (error) {
       console.error('Google Login error:', error);
       setError('Failed to login with Google');
@@ -216,11 +158,7 @@ export default function LoginPage() {
 
         <p className="text-center text-gray-500 text-sm">
           Don't have an account?{' '}
-<<<<<<< HEAD
-          <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl()+'/dashboard')}`} className="text-blue-600 hover:text-blue-700 font-medium">
-=======
           <a href={`/signup?redirect=${encodeURIComponent(getRedirectUrl())}`} className="text-blue-600 hover:text-blue-700 font-medium">
->>>>>>> 7669d29b5a09ea62a49a08c04507400bf932b763
             Sign up
           </a>
         </p>

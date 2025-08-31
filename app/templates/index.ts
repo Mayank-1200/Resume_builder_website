@@ -89,3 +89,4 @@ export const searchTemplates = (query: string) => {
     template.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
   );
 };
+
