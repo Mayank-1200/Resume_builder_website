@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   ArrowRight,
   CheckCircle,
@@ -355,6 +356,7 @@ const AnimatedResumeRotator = () => {
 }
 
 export default function LandingPage() {
+  const { user } = useAuth()
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [displayText, setDisplayText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
@@ -520,13 +522,27 @@ export default function LandingPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-lg px-8 py-6"
-                >
-                  Create My Resume
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
+                {user ? (
+                  <Link href="/dashboard">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-lg px-8 py-6"
+                    >
+                      Go to Dashboard
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/signup">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-lg px-8 py-6"
+                    >
+                      Create My Resume
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
+                )}
                 <Button
                   variant="outline"
                   size="lg"
@@ -713,12 +729,25 @@ export default function LandingPage() {
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">Start Building Your Resume Today</h2>
             <p className="text-xl mb-8 opacity-90">Get started with our free plan or unlock premium features</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)]"
-              >
-                Start Free
-              </Button>
+              {user ? (
+                <Link href="/dashboard">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)]"
+                  >
+                    Go to Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/signup">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)]"
+                  >
+                    Start Free
+                  </Button>
+                </Link>
+              )}
               <Button
                 size="lg"
                 variant="outline"

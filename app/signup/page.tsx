@@ -33,8 +33,8 @@ export default function SignUpPage() {
       }
     }
     
-    // Default to current URL
-    return window.location.href;
+    // Default to dashboard
+    return '/dashboard';
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

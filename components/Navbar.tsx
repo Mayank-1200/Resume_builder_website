@@ -3,8 +3,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { User } from "lucide-react";
+import { User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const { user, isLoading, isHydrated, logout } = useAuth();
@@ -54,15 +62,34 @@ export default function Navbar() {
             <Link href="/dashboard" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
               Dashboard
             </Link>
-            <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
-              <User className="w-5 h-5 text-[rgb(0,48,146)]" />
-              <span className="text-sm text-[rgb(0,48,146)]">
-                {user.firstName || user.name || user.email}
-              </span>
-            </div>
-            <Button variant="outline" onClick={logout} className="hover:text-[rgb(0,135,158)]">
-              Logout
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full">
+                  <User className="w-5 h-5 text-[rgb(0,48,146)]" />
+                  <span className="text-sm text-[rgb(0,48,146)] font-medium">
+                    {user.firstName || user.name || user.email}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.firstName || user.name || 'User'}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600 focus:text-red-600">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         ) : (
           <>
