@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import SiteFooter from "@/components/site-footer"
+import SiteNavbar from "@/components/site-navbar"
 import {
   ArrowRight,
   CheckCircle,
@@ -21,7 +22,6 @@ import {
   Phone,
   MapPin,
   Briefcase,
-  GraduationCap,
 } from "lucide-react"
 
 const typingTexts = ["Software Engineer", "Data Analyst", "Designer", "Marketing Manager", "Product Manager"]
@@ -326,10 +326,7 @@ const ModernResume = () => {
           </div>
 
           <div>
-            <h2 className="text-[rgb(0,48,146)] font-bold text-sm mb-2 flex items-center">
-              <GraduationCap className="w-3 h-3 mr-2 text-[rgb(255,171,91)]" />
-              EDUCATION
-            </h2>
+            <h2 className="text-[rgb(0,48,146)] font-bold text-sm mb-2">EDUCATION</h2>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: visibleSections.includes("main") ? 1 : 0 }}
@@ -542,39 +539,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-[rgb(0,48,146)]">ResumeBuilder</span>
-            </div>
-
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Resume
-              </a>
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Resources
-              </a>
-              <a href="#" className="text-gray-600 hover:text-[rgb(0,135,158)] transition-colors">
-                Pricing
-              </a>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="hover:text-[rgb(0,135,158)]">
-                Login
-              </Button>
-              <Button className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)]">
-                Sign Up
-              </Button>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <SiteNavbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 lg:py-20">
