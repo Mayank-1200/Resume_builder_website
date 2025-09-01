@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import SiteFooter from "@/components/site-footer"
 import {
   ArrowRight,
   CheckCircle,
@@ -16,8 +17,6 @@ import {
   Zap,
   Star,
   Users,
-  MessageCircle,
-  X,
   Mail,
   Phone,
   MapPin,
@@ -816,137 +815,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[rgb(0,48,146)] text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-[rgb(0,135,158)] to-[rgb(255,171,91)] rounded-lg flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">ResumeBuilder</span>
-              </div>
-              <p className="text-[rgb(255,171,91)]">Create professional resumes that get you hired.</p>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Job Seekers</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Create Resume
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Resume Designs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Resume Templates
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Terms and Services
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Our Company</h4>
-              <ul className="space-y-2 text-[rgb(255,171,91)]">
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[rgb(255,242,219)] transition-colors">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-[rgb(0,135,158)] mt-12 pt-8 text-center text-[rgb(255,171,91)]">
-            <p>&copy; 2024 ResumeBuilder. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* Chat Support Bubble */}
-      <div className="fixed bottom-6 right-6 z-50">
-        {showChat ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg shadow-2xl w-80 h-96 flex flex-col"
-          >
-            <div className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] text-white p-4 rounded-t-lg flex items-center justify-between">
-              <h3 className="font-semibold">Chat Support</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowChat(false)}
-                className="text-white hover:bg-[rgb(0,135,158)] p-1"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="flex-1 p-4 bg-gray-50">
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <p className="text-sm text-gray-600">Hi! How can I help you create the perfect resume today?</p>
-              </div>
-            </div>
-            <div className="p-4 border-t">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 border rounded-lg text-sm"
-                />
-                <Button size="sm" className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)]">
-                  Send
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowChat(true)}
-            className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-white p-4 rounded-full shadow-lg"
-          >
-            <MessageCircle className="w-6 h-6" />
-          </motion.button>
-        )}
-      </div>
+      <SiteFooter />
     </div>
   )
 }
