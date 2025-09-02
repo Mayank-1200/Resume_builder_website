@@ -153,33 +153,33 @@ This system allows users to create professional resumes by selecting from variou
 4. Run development server: `npm run dev`
 
 ### Environment Variables
-```env
+\`\`\`env
 NEXTAUTH_SECRET=your-secret-key
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 JWT_SECRET=your-jwt-secret
-```
+\`\`\`
 
 ## Usage Examples
 
 ### Creating a New Resume
-```typescript
+\`\`\`typescript
 // Navigate to template selection
 router.push('/create-resume');
 
 // Select template and edit
 router.push(`/edit-resume/${templateId}`);
-```
+\`\`\`
 
 ### Saving Resume Data
-```typescript
+\`\`\`typescript
 // Save to localStorage
 localStorage.setItem(`resume_${templateId}`, JSON.stringify(resumeData));
 
 // Load from localStorage
 const savedData = localStorage.getItem(`resume_${templateId}`);
 const resumeData = savedData ? JSON.parse(savedData) : initialData;
-```
+\`\`\`
 
 ## Contributing
 
