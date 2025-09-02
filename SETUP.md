@@ -6,7 +6,7 @@ This project uses a hybrid authentication system with both NextAuth.js (for Goog
 
 Create a `.env.local` file in your project root with the following variables:
 
-```bash
+\`\`\`bash
 # Database
 DATABASE_URL="postgresql://username:password@host:port/database"
 
@@ -20,7 +20,7 @@ GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
 # JWT Secret (for custom JWT authentication)
 JWT_SECRET="your-jwt-secret-key-here"
-```
+\`\`\`
 
 ## Google OAuth Setup
 
@@ -38,13 +38,13 @@ JWT_SECRET="your-jwt-secret-key-here"
 
 1. Make sure your Neon database is running and accessible
 2. Run the Prisma migration:
-   ```bash
+   \`\`\`bash
    npx prisma migrate dev
-   ```
+   \`\`\`
 3. Generate the Prisma client:
-   ```bash
+   \`\`\`bash
    npx prisma generate
-   ```
+   \`\`\`
 
 ## Features
 

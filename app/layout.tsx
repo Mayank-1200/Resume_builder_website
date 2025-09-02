@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Resume Builder - Create Professional Resumes",
   description: "Build stunning, ATS-friendly resumes with our intuitive drag-and-drop editor. Choose from professional templates and land more interviews.",
+    generator: 'v0.app'
 };
 
 function LoadingSpinner() {
