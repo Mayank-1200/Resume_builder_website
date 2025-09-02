@@ -135,7 +135,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Professional Experience */}
-      {data.experience.length > 0 && (
+      {data.experience && data.experience.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             PROFESSIONAL EXPERIENCE
@@ -173,7 +173,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Education */}
-      {data.education.length > 0 && (
+      {data.education && data.education.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             EDUCATION
@@ -201,8 +201,8 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
                   {edu.gpa && (
                     <span className="font-medium">GPA: {edu.gpa}</span>
                   )}
-                  {edu.honors.length > 0 && (
-                    <span className="font-medium">Honors: {edu.honors.join(', ')}</span>
+                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
+                    <span className="font-medium">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
                   )}
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Skills */}
-      {data.skills.length > 0 && (
+      {data.skills && data.skills.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             CORE COMPETENCIES
@@ -233,7 +233,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Projects */}
-      {data.projects.length > 0 && (
+      {data.projects && data.projects.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             KEY PROJECTS & INITIATIVES
@@ -273,7 +273,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Certifications */}
-      {data.certifications.length > 0 && (
+      {data.certifications && data.certifications.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             PROFESSIONAL CERTIFICATIONS
@@ -300,7 +300,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Languages */}
-      {data.languages.length > 0 && (
+      {data.languages && data.languages.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-6">
             LANGUAGE PROFICIENCY

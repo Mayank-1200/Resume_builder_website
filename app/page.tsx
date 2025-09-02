@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import Footer from "@/components/Footer";
 import {
   ArrowRight,
   CheckCircle,
@@ -811,6 +812,9 @@ export default function LandingPage() {
           </motion.button>
         )}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 
+
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
@@ -163,6 +164,7 @@ export default function LoginPage() {
           </a>
         </p>
       </div>
+      
     </div>
   );
 }

@@ -62,7 +62,7 @@ interface CreativeDesignerTemplateProps {
   templateId: string;
 }
 
-export default function CreativeDesignerTemplate({ data, templateId }: CreativeDesignerTemplateProps) {
+function CreativeDesignerTemplate({ data, templateId }: CreativeDesignerTemplateProps) {
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -126,7 +126,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       </header>
 
       {/* Professional Experience */}
-      {data.experience.length > 0 && (
+      {data.experience && data.experience.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-4 flex items-center justify-center">
@@ -172,7 +172,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       )}
 
       {/* Education */}
-      {data.education.length > 0 && (
+      {data.education && data.education.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mr-4 flex items-center justify-center">
@@ -203,8 +203,8 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
                   {edu.gpa && (
                     <span className="bg-white px-3 py-1 rounded-full">GPA: {edu.gpa}</span>
                   )}
-                  {edu.honors.length > 0 && (
-                    <span className="bg-white px-3 py-1 rounded-full">Honors: {edu.honors.join(', ')}</span>
+                  {Array.isArray(edu.honors) && edu.honors.length > 0 && (
+                    <span className="bg-white px-3 py-1 rounded-full">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
                   )}
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       )}
 
       {/* Skills */}
-      {data.skills.length > 0 && (
+      {data.skills && data.skills.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mr-4 flex items-center justify-center">
@@ -242,7 +242,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       )}
 
       {/* Projects */}
-      {data.projects.length > 0 && (
+      {data.projects && data.projects.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full mr-4 flex items-center justify-center">
@@ -285,7 +285,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       )}
 
       {/* Certifications */}
-      {data.certifications.length > 0 && (
+      {data.certifications && data.certifications.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full mr-4 flex items-center justify-center">
@@ -315,7 +315,7 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
       )}
 
       {/* Languages */}
-      {data.languages.length > 0 && (
+      {data.languages && data.languages.length > 0 && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mr-4 flex items-center justify-center">
@@ -341,3 +341,5 @@ export default function CreativeDesignerTemplate({ data, templateId }: CreativeD
     </div>
   );
 }
+
+export default CreativeDesignerTemplate;

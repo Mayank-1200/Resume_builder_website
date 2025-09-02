@@ -1,6 +1,7 @@
 'use client';
 
 import { templateRegistry } from '../templates';
+import Footer from '@/components/Footer';
 
 export default function TestTemplatesPage() {
   console.log('Template registry in test page:', templateRegistry);
@@ -21,6 +22,9 @@ export default function TestTemplatesPage() {
           </div>
         ))}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

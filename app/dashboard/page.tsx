@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Sparkles, Clock, Plus, Upload, LayoutGrid, ArrowRight, BarChart2, FileText } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import Footer from '@/components/Footer'
 
 function StatCard({
   icon: Icon,
@@ -311,6 +312,9 @@ export default function DashboardPage() {
           </Card>
         </div>
       </section>
+      
+      {/* Footer */}
+      <Footer />
     </main>
   )
 }

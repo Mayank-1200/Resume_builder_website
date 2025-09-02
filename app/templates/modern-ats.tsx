@@ -122,7 +122,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       </header>
 
       {/* Professional Experience */}
-      {data.experience.length > 0 && (
+      {data.experience && data.experience.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             PROFESSIONAL EXPERIENCE
@@ -160,7 +160,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Education */}
-      {data.education.length > 0 && (
+      {data.education && data.education.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             EDUCATION
@@ -188,8 +188,8 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
                   {edu.gpa && (
                     <span>GPA: {edu.gpa}</span>
                   )}
-                  {edu.honors.length > 0 && (
-                    <span>Honors: {edu.honors.join(', ')}</span>
+                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
+                    <span>Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
                   )}
                 </div>
               </div>
@@ -199,7 +199,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Skills */}
-      {data.skills.length > 0 && (
+      {data.skills && data.skills.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             TECHNICAL SKILLS
@@ -220,7 +220,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Projects */}
-      {data.projects.length > 0 && (
+      {data.projects && data.projects.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             PROJECTS
@@ -260,7 +260,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Certifications */}
-      {data.certifications.length > 0 && (
+      {data.certifications && data.certifications.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             CERTIFICATIONS
@@ -287,7 +287,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Languages */}
-      {data.languages.length > 0 && (
+      {data.languages && data.languages.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
             LANGUAGES

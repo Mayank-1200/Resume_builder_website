@@ -3,6 +3,7 @@ export { default as ModernATSTemplate } from './modern-ats';
 export { default as ClassicExecutiveTemplate } from './classic-executive';
 export { default as MinimalistTechTemplate } from './minimalist-tech';
 export { default as CreativeDesignerTemplate } from './creative-designer';
+export { default as ModernSidebarTemplate } from './modern-sidebar';
 
 // Template metadata for the selection page
 export interface TemplateMetadata {
@@ -66,6 +67,18 @@ export const templateRegistry: TemplateMetadata[] = [
     preview: 'creative-designer',
     tags: ['Creative', 'Design', 'Artistic', 'Bold', 'Visual'],
     component: 'CreativeDesignerTemplate'
+  },
+  {
+    id: 'modern-sidebar',
+    name: 'Modern Sidebar',
+    category: 'Professional',
+    description: 'Contemporary sidebar layout with clean design, featuring contact info and skills in a left panel and experience in the main area.',
+    difficulty: 'Beginner',
+    timeToComplete: '15-20 min',
+    popularity: 94,
+    preview: '/modern-sidebar-preview.svg',
+    tags: ['Professional', 'Sidebar', 'Clean', 'Modern', 'Organized'],
+    component: 'ModernSidebarTemplate'
   }
 ];
 
@@ -89,4 +102,6 @@ export const searchTemplates = (query: string) => {
     template.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
   );
 };
+
+
 

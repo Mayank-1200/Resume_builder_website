@@ -124,7 +124,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       </header>
 
       {/* Professional Experience */}
-      {data.experience.length > 0 && (
+      {data.experience && data.experience.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Experience
@@ -163,7 +163,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Education */}
-      {data.education.length > 0 && (
+      {data.education && data.education.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Education
@@ -191,8 +191,8 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
                   {edu.gpa && (
                     <span className="font-mono">GPA: {edu.gpa}</span>
                   )}
-                  {edu.honors.length > 0 && (
-                    <span className="font-mono">Honors: {edu.honors.join(', ')}</span>
+                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
+                    <span className="font-mono">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
                   )}
                 </div>
               </div>
@@ -202,7 +202,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Skills */}
-      {data.skills.length > 0 && (
+      {data.skills && data.skills.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Skills
@@ -223,7 +223,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Projects */}
-      {data.projects.length > 0 && (
+      {data.projects && data.projects.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Projects
@@ -263,7 +263,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Certifications */}
-      {data.certifications.length > 0 && (
+      {data.certifications && data.certifications.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Certifications
@@ -290,7 +290,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Languages */}
-      {data.languages.length > 0 && (
+      {data.languages && data.languages.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
             Languages

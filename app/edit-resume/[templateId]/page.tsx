@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +23,8 @@ import {
   Award,
   FileText,
   Globe,
-  X
+  X,
+  Star
 } from 'lucide-react';
 
 // Import the template components
@@ -30,6 +32,9 @@ import ModernATSTemplate from '@/app/templates/modern-ats';
 import ClassicExecutiveTemplate from '@/app/templates/classic-executive';
 import MinimalistTechTemplate from '@/app/templates/minimalist-tech';
 import CreativeDesignerTemplate from '@/app/templates/creative-designer';
+import ModernSidebarTemplate from '@/app/templates/modern-sidebar';
+
+// Template-specific functionality will be added inline
 
 interface ResumeData {
   personalInfo: {
@@ -64,7 +69,10 @@ interface ResumeData {
   }>;
   skills: Array<{
     category: string;
-    skills: string[];
+    skills: Array<{
+      name: string;
+      level: number;
+    }>;
   }>;
   projects: Array<{
     name: string;
@@ -99,10 +107,356 @@ const initialResumeData: ResumeData = {
   },
   experience: [],
   education: [],
-  skills: [],
+  skills: [{ category: '', skills: [{ name: '', level: 3 }] }],
   projects: [],
   certifications: [],
   languages: []
+};
+
+// Skill selector data with predefined skills for different professions
+const PROFESSION_SKILLS = {
+  'Software Engineer': {
+    'Programming Languages': [
+      { name: 'JavaScript', level: 4 },
+      { name: 'Python', level: 4 },
+      { name: 'Java', level: 3 },
+      { name: 'C++', level: 3 },
+      { name: 'TypeScript', level: 4 },
+      { name: 'Go', level: 2 },
+      { name: 'Rust', level: 2 },
+      { name: 'PHP', level: 3 },
+      { name: 'Ruby', level: 2 },
+      { name: 'Swift', level: 2 }
+    ],
+    'Frontend Development': [
+      { name: 'React', level: 4 },
+      { name: 'Vue.js', level: 3 },
+      { name: 'Angular', level: 3 },
+      { name: 'HTML5', level: 5 },
+      { name: 'CSS3', level: 4 },
+      { name: 'Sass/SCSS', level: 3 },
+      { name: 'Tailwind CSS', level: 4 },
+      { name: 'Bootstrap', level: 3 },
+      { name: 'Next.js', level: 3 },
+      { name: 'Nuxt.js', level: 2 }
+    ],
+    'Backend Development': [
+      { name: 'Node.js', level: 4 },
+      { name: 'Express.js', level: 4 },
+      { name: 'Django', level: 3 },
+      { name: 'Flask', level: 3 },
+      { name: 'Spring Boot', level: 3 },
+      { name: 'FastAPI', level: 3 },
+      { name: 'Laravel', level: 2 },
+      { name: 'ASP.NET', level: 2 },
+      { name: 'GraphQL', level: 3 },
+      { name: 'REST APIs', level: 4 }
+    ],
+    'Databases': [
+      { name: 'PostgreSQL', level: 4 },
+      { name: 'MySQL', level: 4 },
+      { name: 'MongoDB', level: 3 },
+      { name: 'Redis', level: 3 },
+      { name: 'SQLite', level: 4 },
+      { name: 'Elasticsearch', level: 2 },
+      { name: 'DynamoDB', level: 2 },
+      { name: 'Firebase', level: 3 }
+    ],
+    'DevOps & Tools': [
+      { name: 'Git', level: 4 },
+      { name: 'Docker', level: 3 },
+      { name: 'Kubernetes', level: 2 },
+      { name: 'AWS', level: 3 },
+      { name: 'Azure', level: 2 },
+      { name: 'GCP', level: 2 },
+      { name: 'Jenkins', level: 2 },
+      { name: 'CI/CD', level: 3 },
+      { name: 'Linux', level: 3 },
+      { name: 'Nginx', level: 2 }
+    ],
+    'Testing': [
+      { name: 'Jest', level: 3 },
+      { name: 'Mocha', level: 3 },
+      { name: 'Cypress', level: 2 },
+      { name: 'Selenium', level: 2 },
+      { name: 'Unit Testing', level: 4 },
+      { name: 'Integration Testing', level: 3 },
+      { name: 'E2E Testing', level: 2 }
+    ]
+  },
+  'Data Scientist': {
+    'Programming Languages': [
+      { name: 'Python', level: 5 },
+      { name: 'R', level: 4 },
+      { name: 'SQL', level: 4 },
+      { name: 'Julia', level: 2 },
+      { name: 'Scala', level: 2 }
+    ],
+    'Data Analysis': [
+      { name: 'Pandas', level: 5 },
+      { name: 'NumPy', level: 4 },
+      { name: 'Matplotlib', level: 4 },
+      { name: 'Seaborn', level: 3 },
+      { name: 'Plotly', level: 3 },
+      { name: 'Jupyter Notebooks', level: 5 },
+      { name: 'Data Cleaning', level: 4 },
+      { name: 'Exploratory Data Analysis', level: 4 }
+    ],
+    'Machine Learning': [
+      { name: 'Scikit-learn', level: 4 },
+      { name: 'TensorFlow', level: 3 },
+      { name: 'PyTorch', level: 3 },
+      { name: 'Keras', level: 3 },
+      { name: 'XGBoost', level: 3 },
+      { name: 'LightGBM', level: 2 },
+      { name: 'Deep Learning', level: 3 },
+      { name: 'NLP', level: 2 },
+      { name: 'Computer Vision', level: 2 }
+    ],
+    'Big Data': [
+      { name: 'Apache Spark', level: 3 },
+      { name: 'Hadoop', level: 2 },
+      { name: 'Kafka', level: 2 },
+      { name: 'Hive', level: 2 },
+      { name: 'Airflow', level: 2 }
+    ],
+    'Databases': [
+      { name: 'PostgreSQL', level: 4 },
+      { name: 'MongoDB', level: 3 },
+      { name: 'Redis', level: 3 },
+      { name: 'Elasticsearch', level: 2 },
+      { name: 'Cassandra', level: 2 }
+    ],
+    'Visualization': [
+      { name: 'Tableau', level: 3 },
+      { name: 'Power BI', level: 2 },
+      { name: 'D3.js', level: 2 },
+      { name: 'Bokeh', level: 2 },
+      { name: 'Dash', level: 2 }
+    ]
+  },
+  'Product Manager': {
+    'Product Strategy': [
+      { name: 'Product Roadmapping', level: 4 },
+      { name: 'Market Research', level: 4 },
+      { name: 'Competitive Analysis', level: 4 },
+      { name: 'User Research', level: 3 },
+      { name: 'A/B Testing', level: 3 },
+      { name: 'Product Metrics', level: 4 },
+      { name: 'Go-to-Market Strategy', level: 3 }
+    ],
+    'Tools & Platforms': [
+      { name: 'Jira', level: 4 },
+      { name: 'Confluence', level: 3 },
+      { name: 'Figma', level: 3 },
+      { name: 'Miro', level: 3 },
+      { name: 'Slack', level: 4 },
+      { name: 'Notion', level: 3 },
+      { name: 'Amplitude', level: 2 },
+      { name: 'Mixpanel', level: 2 },
+      { name: 'Google Analytics', level: 3 }
+    ],
+    'Methodologies': [
+      { name: 'Agile', level: 4 },
+      { name: 'Scrum', level: 4 },
+      { name: 'Kanban', level: 3 },
+      { name: 'Design Thinking', level: 3 },
+      { name: 'Lean Startup', level: 3 },
+      { name: 'User Story Mapping', level: 3 }
+    ],
+    'Data Analysis': [
+      { name: 'SQL', level: 3 },
+      { name: 'Excel', level: 4 },
+      { name: 'Google Sheets', level: 4 },
+      { name: 'Tableau', level: 2 },
+      { name: 'Data Visualization', level: 3 }
+    ]
+  },
+  'UX/UI Designer': {
+    'Design Tools': [
+      { name: 'Figma', level: 5 },
+      { name: 'Adobe XD', level: 4 },
+      { name: 'Sketch', level: 3 },
+      { name: 'Adobe Photoshop', level: 4 },
+      { name: 'Adobe Illustrator', level: 3 },
+      { name: 'InVision', level: 3 },
+      { name: 'Principle', level: 2 },
+      { name: 'Framer', level: 2 }
+    ],
+    'Design Systems': [
+      { name: 'Design Systems', level: 4 },
+      { name: 'Component Libraries', level: 4 },
+      { name: 'Style Guides', level: 4 },
+      { name: 'Design Tokens', level: 3 },
+      { name: 'Atomic Design', level: 3 }
+    ],
+    'User Research': [
+      { name: 'User Interviews', level: 4 },
+      { name: 'Usability Testing', level: 4 },
+      { name: 'Surveys', level: 3 },
+      { name: 'A/B Testing', level: 3 },
+      { name: 'Analytics', level: 3 },
+      { name: 'Persona Development', level: 4 }
+    ],
+    'Prototyping': [
+      { name: 'Wireframing', level: 5 },
+      { name: 'Prototyping', level: 4 },
+      { name: 'User Flows', level: 4 },
+      { name: 'Information Architecture', level: 3 },
+      { name: 'Interaction Design', level: 4 }
+    ],
+    'Frontend Development': [
+      { name: 'HTML', level: 4 },
+      { name: 'CSS', level: 4 },
+      { name: 'JavaScript', level: 3 },
+      { name: 'React', level: 2 },
+      { name: 'Vue.js', level: 2 }
+    ]
+  },
+  'Marketing Specialist': {
+    'Digital Marketing': [
+      { name: 'Google Ads', level: 4 },
+      { name: 'Facebook Ads', level: 4 },
+      { name: 'Instagram Ads', level: 3 },
+      { name: 'LinkedIn Ads', level: 3 },
+      { name: 'SEO', level: 4 },
+      { name: 'Content Marketing', level: 4 },
+      { name: 'Email Marketing', level: 4 },
+      { name: 'Social Media Marketing', level: 4 }
+    ],
+    'Analytics & Tools': [
+      { name: 'Google Analytics', level: 4 },
+      { name: 'Google Tag Manager', level: 3 },
+      { name: 'Facebook Pixel', level: 3 },
+      { name: 'Hotjar', level: 2 },
+      { name: 'SEMrush', level: 3 },
+      { name: 'Ahrefs', level: 2 },
+      { name: 'Mailchimp', level: 3 },
+      { name: 'HubSpot', level: 2 }
+    ],
+    'Content Creation': [
+      { name: 'Copywriting', level: 4 },
+      { name: 'Content Strategy', level: 4 },
+      { name: 'Blog Writing', level: 3 },
+      { name: 'Video Editing', level: 2 },
+      { name: 'Graphic Design', level: 2 },
+      { name: 'Canva', level: 3 }
+    ],
+    'Campaign Management': [
+      { name: 'Campaign Planning', level: 4 },
+      { name: 'A/B Testing', level: 3 },
+      { name: 'Conversion Optimization', level: 3 },
+      { name: 'Lead Generation', level: 3 },
+      { name: 'Marketing Automation', level: 2 }
+    ]
+  },
+  'Sales Representative': {
+    'Sales Techniques': [
+      { name: 'Consultative Selling', level: 4 },
+      { name: 'Solution Selling', level: 4 },
+      { name: 'Relationship Building', level: 4 },
+      { name: 'Negotiation', level: 4 },
+      { name: 'Objection Handling', level: 4 },
+      { name: 'Closing Techniques', level: 4 },
+      { name: 'Prospecting', level: 4 }
+    ],
+    'CRM & Tools': [
+      { name: 'Salesforce', level: 4 },
+      { name: 'HubSpot CRM', level: 3 },
+      { name: 'Pipedrive', level: 3 },
+      { name: 'Zoho CRM', level: 2 },
+      { name: 'LinkedIn Sales Navigator', level: 3 },
+      { name: 'Zoom', level: 4 },
+      { name: 'Microsoft Teams', level: 3 }
+    ],
+    'Sales Process': [
+      { name: 'Lead Qualification', level: 4 },
+      { name: 'Pipeline Management', level: 4 },
+      { name: 'Forecasting', level: 3 },
+      { name: 'Sales Presentations', level: 4 },
+      { name: 'Contract Negotiation', level: 3 },
+      { name: 'Account Management', level: 3 }
+    ],
+    'Industry Knowledge': [
+      { name: 'Market Analysis', level: 3 },
+      { name: 'Competitive Intelligence', level: 3 },
+      { name: 'Product Knowledge', level: 4 },
+      { name: 'Industry Trends', level: 3 }
+    ]
+  },
+  'Project Manager': {
+    'Project Management': [
+      { name: 'Project Planning', level: 4 },
+      { name: 'Risk Management', level: 4 },
+      { name: 'Stakeholder Management', level: 4 },
+      { name: 'Resource Allocation', level: 4 },
+      { name: 'Budget Management', level: 3 },
+      { name: 'Timeline Management', level: 4 },
+      { name: 'Quality Assurance', level: 3 }
+    ],
+    'Methodologies': [
+      { name: 'Agile', level: 4 },
+      { name: 'Scrum', level: 4 },
+      { name: 'Kanban', level: 3 },
+      { name: 'Waterfall', level: 3 },
+      { name: 'Lean', level: 2 },
+      { name: 'Six Sigma', level: 2 }
+    ],
+    'Tools': [
+      { name: 'Microsoft Project', level: 3 },
+      { name: 'Jira', level: 4 },
+      { name: 'Asana', level: 3 },
+      { name: 'Trello', level: 3 },
+      { name: 'Monday.com', level: 2 },
+      { name: 'Smartsheet', level: 2 },
+      { name: 'Slack', level: 4 },
+      { name: 'Microsoft Teams', level: 3 }
+    ],
+    'Leadership': [
+      { name: 'Team Leadership', level: 4 },
+      { name: 'Conflict Resolution', level: 3 },
+      { name: 'Communication', level: 4 },
+      { name: 'Decision Making', level: 4 },
+      { name: 'Problem Solving', level: 4 }
+    ]
+  },
+  'Financial Analyst': {
+    'Financial Analysis': [
+      { name: 'Financial Modeling', level: 4 },
+      { name: 'Valuation', level: 4 },
+      { name: 'Budgeting', level: 4 },
+      { name: 'Forecasting', level: 4 },
+      { name: 'Risk Analysis', level: 3 },
+      { name: 'Investment Analysis', level: 3 },
+      { name: 'Cost Analysis', level: 3 }
+    ],
+    'Tools & Software': [
+      { name: 'Excel', level: 5 },
+      { name: 'PowerPoint', level: 4 },
+      { name: 'Bloomberg Terminal', level: 3 },
+      { name: 'FactSet', level: 2 },
+      { name: 'S&P Capital IQ', level: 2 },
+      { name: 'QuickBooks', level: 3 },
+      { name: 'SAP', level: 2 },
+      { name: 'Oracle', level: 2 }
+    ],
+    'Data Analysis': [
+      { name: 'SQL', level: 3 },
+      { name: 'Python', level: 2 },
+      { name: 'R', level: 2 },
+      { name: 'Tableau', level: 3 },
+      { name: 'Power BI', level: 2 },
+      { name: 'Statistical Analysis', level: 3 }
+    ],
+    'Financial Knowledge': [
+      { name: 'GAAP', level: 4 },
+      { name: 'IFRS', level: 3 },
+      { name: 'Financial Statements', level: 4 },
+      { name: 'Ratio Analysis', level: 4 },
+      { name: 'Capital Markets', level: 3 },
+      { name: 'Corporate Finance', level: 3 }
+    ]
+  }
 };
 
 export default function EditResumePage() {
@@ -113,8 +467,31 @@ export default function EditResumePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
+  const [showSkillSelector, setShowSkillSelector] = useState(false);
+  const [selectedProfession, setSelectedProfession] = useState<string>('');
+  const [selectedSkillCategories, setSelectedSkillCategories] = useState<string[]>([]);
 
   const templateId = params.templateId as string;
+
+  // Helper function to get skills for a profession
+  const getSkillsForProfession = (profession: string) => {
+    const professionData = PROFESSION_SKILLS[profession as keyof typeof PROFESSION_SKILLS];
+    return professionData || {};
+  };
+
+  // Helper function to add skills from selector
+  const addSkillsFromSelector = (profession: string, selectedCategories: string[]) => {
+    const professionSkills = getSkillsForProfession(profession);
+    const newSkills = selectedCategories.map(category => ({
+      category,
+      skills: professionSkills[category as keyof typeof professionSkills] || []
+    }));
+    
+    setResumeData(prev => ({
+      ...prev,
+      skills: [...prev.skills, ...newSkills]
+    }));
+  };
 
   // Load saved resume data on component mount
   useEffect(() => {
@@ -122,7 +499,26 @@ export default function EditResumePage() {
       const savedData = localStorage.getItem(`resume_${templateId}`);
       if (savedData) {
         try {
-          setResumeData(JSON.parse(savedData));
+          const parsedData = JSON.parse(savedData);
+          // Ensure all fields have proper initial values to prevent controlled/uncontrolled input warnings
+          setResumeData({
+            personalInfo: {
+              firstName: parsedData.personalInfo?.firstName || '',
+              lastName: parsedData.personalInfo?.lastName || '',
+              email: parsedData.personalInfo?.email || '',
+              phone: parsedData.personalInfo?.phone || '',
+              location: parsedData.personalInfo?.location || '',
+              linkedin: parsedData.personalInfo?.linkedin || '',
+              website: parsedData.personalInfo?.website || '',
+              summary: parsedData.personalInfo?.summary || ''
+            },
+            experience: parsedData.experience || [],
+            education: parsedData.education || [],
+            skills: parsedData.skills || [{ category: '', skills: [{ name: '', level: 3 }] }],
+            projects: parsedData.projects || [],
+            certifications: parsedData.certifications || [],
+            languages: parsedData.languages || []
+          });
         } catch (error) {
           console.error('Error parsing saved resume data:', error);
         }
@@ -132,7 +528,7 @@ export default function EditResumePage() {
 
   // Auto-populate with user data if available
   useEffect(() => {
-    if (user && resumeData.personalInfo.firstName === '') {
+    if (user && resumeData.personalInfo.firstName === '' && resumeData.personalInfo.lastName === '' && resumeData.personalInfo.email === '') {
       setResumeData(prev => ({
         ...prev,
         personalInfo: {
@@ -143,7 +539,7 @@ export default function EditResumePage() {
         }
       }));
     }
-  }, [user, resumeData.personalInfo.firstName]);
+  }, [user]);
 
   // Save resume data to localStorage
   const saveResumeData = () => {
@@ -316,7 +712,7 @@ export default function EditResumePage() {
   const addSkillGroup = () => {
     setResumeData(prev => ({
       ...prev,
-      skills: [...prev.skills, { category: '', skills: [''] }]
+      skills: [...prev.skills, { category: '', skills: [{ name: '', level: 3 }] }]
     }));
   };
 
@@ -332,7 +728,7 @@ export default function EditResumePage() {
       ...prev,
       skills: prev.skills.map((skillGroup, i) => 
         i === skillGroupIndex 
-          ? { ...skillGroup, skills: [...skillGroup.skills, ''] }
+          ? { ...skillGroup, skills: [...skillGroup.skills, { name: '', level: 3 }] }
           : skillGroup
       )
     }));
@@ -349,7 +745,7 @@ export default function EditResumePage() {
     }));
   };
 
-  const handleSkillChange = (skillGroupIndex: number, skillIndex: number, value: string) => {
+  const handleSkillChange = (skillGroupIndex: number, skillIndex: number, field: 'name' | 'level', value: string | number) => {
     setResumeData(prev => ({
       ...prev,
       skills: prev.skills.map((skillGroup, i) => 
@@ -357,7 +753,7 @@ export default function EditResumePage() {
           ? { 
               ...skillGroup, 
               skills: skillGroup.skills.map((skill, j) => 
-                j === skillIndex ? value : skill
+                j === skillIndex ? { ...skill, [field]: value } : skill
               )
             }
           : skillGroup
@@ -507,11 +903,128 @@ export default function EditResumePage() {
     { id: 'education', label: 'Education', icon: GraduationCap },
     { id: 'skills', label: 'Skills', icon: Award },
     { id: 'projects', label: 'Projects', icon: FileText },
+    { id: 'certifications', label: 'Certifications', icon: Award },
     { id: 'languages', label: 'Languages', icon: Globe }
   ];
 
+  // Star rating component for proficiency levels
+  const ProficiencyStars = ({ level, onLevelChange }: { level: number; onLevelChange: (level: number) => void }) => (
+    <div className="flex items-center space-x-2">
+      <div className="flex space-x-1">
+        {[1, 2, 3, 4, 5].map((starLevel) => (
+          <button
+            key={starLevel}
+            type="button"
+            onClick={() => onLevelChange(starLevel)}
+            className={`w-6 h-6 rounded-full border-2 transition-colors ${
+              starLevel <= level
+                ? 'bg-blue-500 border-blue-500 text-white'
+                : 'border-blue-500 text-transparent hover:bg-blue-100'
+            }`}
+            title={`Level ${starLevel}`}
+          >
+            {starLevel <= level ? '★' : '☆'}
+          </button>
+        ))}
+      </div>
+      <span className="text-sm text-gray-600 font-medium">({level}/5)</span>
+    </div>
+  );
+
+  // Transform data for template compatibility
+  const transformDataForTemplate = (data: ResumeData) => {
+    const baseData = {
+      personalInfo: {
+        firstName: data.personalInfo?.firstName || '',
+        lastName: data.personalInfo?.lastName || '',
+        email: data.personalInfo?.email || '',
+        phone: data.personalInfo?.phone || '',
+        location: data.personalInfo?.location || '',
+        linkedin: data.personalInfo?.linkedin || '',
+        website: data.personalInfo?.website || ''
+      },
+      summary: data.personalInfo?.summary || '',
+      experience: (data.experience || []).map(exp => ({
+        title: exp.position || '',
+        company: exp.company || '',
+        location: exp.location || '',
+        startDate: exp.startDate || '',
+        endDate: exp.endDate || '',
+        description: exp.description || []
+      })),
+      education: (data.education || []).map(edu => ({
+        degree: `${edu.degree || ''} in ${edu.field || ''}`,
+        institution: edu.institution || '',
+        location: edu.location || '',
+        startDate: edu.startDate || '',
+        endDate: edu.endDate || '',
+        gpa: edu.gpa || '',
+        honors: Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''
+      })),
+      projects: (data.projects || []).map(proj => ({
+        name: proj.name || '',
+        description: proj.description || '',
+        technologies: proj.technologies || [],
+        link: proj.link || '',
+        startDate: proj.startDate || '',
+        endDate: proj.endDate || ''
+      })),
+      certifications: (data.certifications || []).map(cert => ({
+        name: cert.name || '',
+        issuer: cert.issuer || '',
+        date: cert.date || '',
+        link: cert.link || ''
+      }))
+    };
+
+    // Template-specific data transformations
+    if (templateId === 'modern-sidebar') {
+      return {
+        ...baseData,
+        skills: {
+          technical: (data.skills || []).flatMap(skill => 
+            (skill.skills || []).map(s => ({
+              name: s.name || '',
+              level: s.level || 3
+            }))
+          ),
+          soft: (data.skills || []).filter(skill => 
+            skill.category?.toLowerCase().includes('soft') || 
+            skill.category?.toLowerCase().includes('communication') ||
+            skill.category?.toLowerCase().includes('leadership')
+          ).flatMap(skill => 
+            (skill.skills || []).map(s => ({
+              name: s.name || '',
+              level: s.level || 3
+            }))
+          ),
+          languages: (data.languages || []).map(lang => ({
+            name: lang.language || '',
+            level: lang.proficiency === 'Native' ? 5 : 
+                   lang.proficiency === 'Fluent' ? 4 :
+                   lang.proficiency === 'Intermediate' ? 3 :
+                   lang.proficiency === 'Basic' ? 2 : 1
+          }))
+        }
+      };
+    } else {
+      // For modern-ats, classic-executive, minimalist-tech, creative-designer
+      return {
+        ...baseData,
+        skills: (data.skills || []).map(skillGroup => ({
+          category: skillGroup.category || '',
+          skills: (skillGroup.skills || []).map(skill => skill.name || '')
+        })),
+        languages: (data.languages || []).map(lang => ({
+          language: lang.language || '',
+          proficiency: lang.proficiency || ''
+        }))
+      };
+    }
+  };
+
   // Get the template component
-  let TemplateComponent: React.ComponentType<{ data: ResumeData; templateId: string }> | null = null;
+  let TemplateComponent: React.ComponentType<{ data: any; templateId: string }> | null = null;
   let templateName: string | null = null;
 
   switch (templateId) {
@@ -531,11 +1044,22 @@ export default function EditResumePage() {
       TemplateComponent = CreativeDesignerTemplate;
       templateName = 'Creative Designer';
       break;
+    case 'modern-sidebar':
+      TemplateComponent = ModernSidebarTemplate;
+      templateName = 'Modern Sidebar';
+      break;
     default:
       TemplateComponent = null;
       templateName = 'Unknown Template';
       break;
   }
+
+  // Template-specific features
+  const isModernSidebar = templateId === 'modern-sidebar';
+  const isCreativeDesigner = templateId === 'creative-designer';
+  const isModernATS = templateId === 'modern-ats';
+  const isClassicExecutive = templateId === 'classic-executive';
+  const isMinimalistTech = templateId === 'minimalist-tech';
 
   const loadSampleData = () => {
     setResumeData({
@@ -594,10 +1118,26 @@ export default function EditResumePage() {
         }
       ],
       skills: [
-        { category: 'Programming Languages', skills: ['JavaScript', 'TypeScript', 'Python'] },
-        { category: 'Frameworks', skills: ['React', 'Next.js', 'Node.js'] },
-        { category: 'Databases', skills: ['PostgreSQL', 'MongoDB', 'Redis'] },
-        { category: 'Tools', skills: ['Git', 'Docker', 'AWS'] }
+        { category: 'Programming Languages', skills: [
+          { name: 'JavaScript', level: 4 },
+          { name: 'TypeScript', level: 4 },
+          { name: 'Python', level: 3 }
+        ]},
+        { category: 'Frameworks', skills: [
+          { name: 'React', level: 4 },
+          { name: 'Next.js', level: 3 },
+          { name: 'Node.js', level: 4 }
+        ]},
+        { category: 'Databases', skills: [
+          { name: 'PostgreSQL', level: 4 },
+          { name: 'MongoDB', level: 3 },
+          { name: 'Redis', level: 3 }
+        ]},
+        { category: 'Tools', skills: [
+          { name: 'Git', level: 4 },
+          { name: 'Docker', level: 3 },
+          { name: 'AWS', level: 3 }
+        ]}
       ],
       projects: [
         {
@@ -729,7 +1269,7 @@ export default function EditResumePage() {
                           <Label htmlFor="firstName">First Name</Label>
                           <Input
                             id="firstName"
-                            value={resumeData.personalInfo.firstName}
+                            value={resumeData.personalInfo?.firstName || ''}
                             onChange={(e) => handlePersonalInfoChange('firstName', e.target.value)}
                             placeholder="John"
                           />
@@ -738,7 +1278,7 @@ export default function EditResumePage() {
                           <Label htmlFor="lastName">Last Name</Label>
                           <Input
                             id="lastName"
-                            value={resumeData.personalInfo.lastName}
+                            value={resumeData.personalInfo?.lastName || ''}
                             onChange={(e) => handlePersonalInfoChange('lastName', e.target.value)}
                             placeholder="Doe"
                           />
@@ -750,7 +1290,7 @@ export default function EditResumePage() {
                           <Input
                             id="email"
                             type="email"
-                            value={resumeData.personalInfo.email}
+                            value={resumeData.personalInfo?.email || ''}
                             onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
                             placeholder="john.doe@email.com"
                           />
@@ -759,7 +1299,7 @@ export default function EditResumePage() {
                           <Label htmlFor="phone">Phone</Label>
                           <Input
                             id="phone"
-                            value={resumeData.personalInfo.phone}
+                            value={resumeData.personalInfo?.phone || ''}
                             onChange={(e) => handlePersonalInfoChange('phone', e.target.value)}
                             placeholder="+1 (555) 123-4567"
                           />
@@ -769,7 +1309,7 @@ export default function EditResumePage() {
                         <Label htmlFor="location">Location</Label>
                         <Input
                           id="location"
-                          value={resumeData.personalInfo.location}
+                          value={resumeData.personalInfo?.location || ''}
                           onChange={(e) => handlePersonalInfoChange('location', e.target.value)}
                           placeholder="New York, NY"
                         />
@@ -779,18 +1319,20 @@ export default function EditResumePage() {
                           <Label htmlFor="linkedin">LinkedIn</Label>
                           <Input
                             id="linkedin"
-                            value={resumeData.personalInfo.linkedin}
+                            value={resumeData.personalInfo?.linkedin || ''}
                             onChange={(e) => handlePersonalInfoChange('linkedin', e.target.value)}
                             placeholder="linkedin.com/in/johndoe"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="website">Website</Label>
+                          <Label htmlFor="website">
+                            {isCreativeDesigner ? 'Portfolio Website' : 'Website'}
+                          </Label>
                           <Input
                             id="website"
-                            value={resumeData.personalInfo.website}
+                            value={resumeData.personalInfo?.website || ''}
                             onChange={(e) => handlePersonalInfoChange('website', e.target.value)}
-                            placeholder="johndoe.com"
+                            placeholder={isCreativeDesigner ? "https://yourportfolio.com" : "johndoe.com"}
                           />
                         </div>
                       </div>
@@ -798,9 +1340,9 @@ export default function EditResumePage() {
                         <Label htmlFor="summary">Professional Summary</Label>
                         <Textarea
                           id="summary"
-                          value={resumeData.personalInfo.summary}
+                          value={resumeData.personalInfo?.summary || ''}
                           onChange={(e) => handlePersonalInfoChange('summary', e.target.value)}
-                          placeholder="Experienced software engineer with 5+ years..."
+                          placeholder={isCreativeDesigner ? "Describe your creative expertise and artistic vision..." : "Experienced software engineer with 5+ years..."}
                           rows={4}
                         />
                       </div>
@@ -835,7 +1377,7 @@ export default function EditResumePage() {
                               <div>
                                 <Label>Company</Label>
                                 <Input
-                                  value={exp.company}
+                                  value={exp.company || ''}
                                   onChange={(e) => handleExperienceChange(index, 'company', e.target.value)}
                                   placeholder="Company Name"
                                 />
@@ -843,7 +1385,7 @@ export default function EditResumePage() {
                               <div>
                                 <Label>Position</Label>
                                 <Input
-                                  value={exp.position}
+                                  value={exp.position || ''}
                                   onChange={(e) => handleExperienceChange(index, 'position', e.target.value)}
                                   placeholder="Job Title"
                                 />
@@ -853,7 +1395,7 @@ export default function EditResumePage() {
                               <div>
                                 <Label>Location</Label>
                                 <Input
-                                  value={exp.location}
+                                  value={exp.location || ''}
                                   onChange={(e) => handleExperienceChange(index, 'location', e.target.value)}
                                   placeholder="City, State"
                                 />
@@ -862,7 +1404,7 @@ export default function EditResumePage() {
                                 <Label>Start Date</Label>
                                 <Input
                                   type="date"
-                                  value={exp.startDate}
+                                  value={exp.startDate || ''}
                                   onChange={(e) => handleExperienceChange(index, 'startDate', e.target.value)}
                                 />
                               </div>
@@ -870,7 +1412,7 @@ export default function EditResumePage() {
                                 <Label>End Date</Label>
                                 <Input
                                   type="date"
-                                  value={exp.endDate}
+                                  value={exp.endDate || ''}
                                   onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
                                   disabled={exp.current}
                                 />
@@ -900,15 +1442,255 @@ export default function EditResumePage() {
                               {exp.description.map((desc, descIndex) => (
                                 <div key={descIndex} className="flex items-center space-x-2 mb-2">
                                   <Input
-                                    value={desc}
+                                    value={desc || ''}
                                     onChange={(e) => handleExperienceDescriptionChange(index, descIndex, e.target.value)}
-                                    placeholder="Describe your responsibilities and achievements..."
+                                    placeholder={isCreativeDesigner ? "Describe your creative achievements and impact..." : "Describe your responsibilities and achievements..."}
                                   />
                                   <Button
                                     type="button"
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => removeExperienceDescription(index, descIndex)}
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Skills Section with Template-Specific Features */}
+                  {activeSection === 'skills' && (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold">
+                          {isCreativeDesigner ? 'Creative Skills' : 
+                           isModernATS ? 'Technical Skills' :
+                           isClassicExecutive ? 'Core Competencies' :
+                           'Skills'}
+                        </h3>
+                        <div className="flex space-x-2">
+                          <Button 
+                            onClick={() => setShowSkillSelector(true)} 
+                            variant="outline" 
+                            size="sm"
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add from Template
+                          </Button>
+                          <Button onClick={addSkillGroup} size="sm">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Skill Category
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Modern Sidebar Template - Proficiency Circles Info */}
+                      {isModernSidebar && (
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                          <p className="text-sm text-blue-700 mb-2">
+                            <Star className="w-4 h-4 inline mr-1" />
+                            Use the proficiency level to indicate your skill level (1-5) - this will show as circles in the template
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Template-specific skill section titles */}
+                      {isModernATS && (
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                          <p className="text-sm text-gray-700 mb-2">
+                            💡 This template displays skills as "Technical Skills" with categories
+                          </p>
+                        </div>
+                      )}
+                      {isClassicExecutive && (
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                          <p className="text-sm text-gray-700 mb-2">
+                            💡 This template displays skills as "Core Competencies" with bullet separators
+                          </p>
+                        </div>
+                      )}
+                      {isMinimalistTech && (
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                          <p className="text-sm text-gray-700 mb-2">
+                            💡 This template displays skills with a minimalist tech style
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Skill Selector Modal */}
+                      {showSkillSelector && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-4">
+                              <h3 className="text-lg font-semibold">Select Skills from Template</h3>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setShowSkillSelector(false);
+                                  setSelectedProfession('');
+                                  setSelectedSkillCategories([]);
+                                }}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+
+                            <div className="space-y-4">
+                              <div>
+                                <Label>Select Profession</Label>
+                                <select
+                                  value={selectedProfession}
+                                  onChange={(e) => {
+                                    setSelectedProfession(e.target.value);
+                                    setSelectedSkillCategories([]);
+                                  }}
+                                  className="w-full p-2 border border-gray-300 rounded-md mt-1"
+                                >
+                                  <option value="">Choose a profession...</option>
+                                  {Object.keys(PROFESSION_SKILLS).map(profession => (
+                                    <option key={profession} value={profession}>
+                                      {profession}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              {selectedProfession && (
+                                <div>
+                                  <Label>Select Skill Categories</Label>
+                                  <div className="grid grid-cols-2 gap-2 mt-2">
+                                    {Object.keys(getSkillsForProfession(selectedProfession)).map(category => (
+                                      <label key={category} className="flex items-center space-x-2">
+                                        <input
+                                          type="checkbox"
+                                          checked={selectedSkillCategories.includes(category)}
+                                          onChange={(e) => {
+                                            if (e.target.checked) {
+                                              setSelectedSkillCategories([...selectedSkillCategories, category]);
+                                            } else {
+                                              setSelectedSkillCategories(selectedSkillCategories.filter(c => c !== category));
+                                            }
+                                          }}
+                                          className="rounded"
+                                        />
+                                        <span className="text-sm">{category}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setShowSkillSelector(false);
+                                    setSelectedProfession('');
+                                    setSelectedSkillCategories([]);
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    if (selectedProfession && selectedSkillCategories.length > 0) {
+                                      addSkillsFromSelector(selectedProfession, selectedSkillCategories);
+                                      setShowSkillSelector(false);
+                                      setSelectedProfession('');
+                                      setSelectedSkillCategories([]);
+                                    }
+                                  }}
+                                  disabled={!selectedProfession || selectedSkillCategories.length === 0}
+                                >
+                                  Add Selected Skills
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {resumeData.skills.map((skillGroup, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex justify-between items-start mb-4">
+                            <h4 className="text-md font-medium">Skill Category #{index + 1}</h4>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeSkillGroup(index)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="space-y-4">
+                            <div>
+                              <Label>Category Name</Label>
+                              <Input
+                                value={skillGroup.category || ''}
+                                onChange={(e) => handleSkillsChange(index, 'category', e.target.value)}
+                                placeholder={
+                                  isCreativeDesigner ? "Design Tools, Creative Software, etc." :
+                                  isModernATS ? "Programming Languages, Frameworks, etc." :
+                                  isClassicExecutive ? "Leadership, Management, etc." :
+                                  isMinimalistTech ? "Languages, Frameworks, etc." :
+                                  "Programming Languages, Tools, etc."
+                                }
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <Label>Skills</Label>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addSkill(index)}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Add Skill
+                                </Button>
+                              </div>
+                              {isModernSidebar && (
+                                <p className="text-sm text-gray-500 mb-3">
+                                  Set proficiency level: 1=Beginner, 2=Basic, 3=Intermediate, 4=Advanced, 5=Expert
+                                </p>
+                              )}
+                              {skillGroup.skills.map((skill, skillIndex) => (
+                                <div key={skillIndex} className="flex items-center space-x-2 mb-2">
+                                  <div className="flex-1">
+                                    <Input
+                                      value={skill.name || ''}
+                                      onChange={(e) => handleSkillChange(index, skillIndex, 'name', e.target.value)}
+                                      placeholder={
+                                        isCreativeDesigner ? "Adobe Photoshop, Figma, etc." :
+                                        isModernATS ? "JavaScript, React, Node.js..." :
+                                        isClassicExecutive ? "Strategic Planning, Team Leadership..." :
+                                        isMinimalistTech ? "Python, Docker, Kubernetes..." :
+                                        "JavaScript, React, Node.js..."
+                                      }
+                                    />
+                                  </div>
+                                  {isModernSidebar && (
+                                    <div className="flex items-center space-x-2">
+                                      <Label className="text-sm whitespace-nowrap">Level:</Label>
+                                      <ProficiencyStars 
+                                        level={skill.level} 
+                                        onLevelChange={(level) => handleSkillChange(index, skillIndex, 'level', level)} 
+                                      />
+                                    </div>
+                                  )}
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeSkill(index, skillIndex)}
                                     className="text-red-600 hover:text-red-700"
                                   >
                                     <X className="w-4 h-4" />
@@ -1047,76 +1829,6 @@ export default function EditResumePage() {
                     </div>
                   )}
 
-                  {/* Skills Section */}
-                  {activeSection === 'skills' && (
-                    <div className="space-y-6">
-                      <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold">Skills</h3>
-                        <Button onClick={addSkillGroup} size="sm">
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add Skill Category
-                        </Button>
-                      </div>
-                      {resumeData.skills.map((skillGroup, index) => (
-                        <Card key={index} className="p-4">
-                          <div className="flex justify-between items-start mb-4">
-                            <h4 className="text-md font-medium">Skill Category #{index + 1}</h4>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeSkillGroup(index)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          <div className="space-y-4">
-                            <div>
-                              <Label>Category Name</Label>
-                              <Input
-                                value={skillGroup.category}
-                                onChange={(e) => handleSkillsChange(index, 'category', e.target.value)}
-                                placeholder="Programming Languages, Tools, etc."
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between items-center mb-2">
-                                <Label>Skills</Label>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => addSkill(index)}
-                                >
-                                  <Plus className="w-4 h-4 mr-1" />
-                                  Add Skill
-                                </Button>
-                              </div>
-                              {skillGroup.skills.map((skill, skillIndex) => (
-                                <div key={skillIndex} className="flex items-center space-x-2 mb-2">
-                                  <Input
-                                    value={skill}
-                                    onChange={(e) => handleSkillChange(index, skillIndex, e.target.value)}
-                                    placeholder="JavaScript, React, Node.js..."
-                                  />
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => removeSkill(index, skillIndex)}
-                                    className="text-red-600 hover:text-red-700"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-
                   {/* Projects Section */}
                   {activeSection === 'projects' && (
                     <div className="space-y-6">
@@ -1224,6 +1936,68 @@ export default function EditResumePage() {
                     </div>
                   )}
 
+                  {/* Certifications Section */}
+                  {activeSection === 'certifications' && (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold">Certifications</h3>
+                        <Button onClick={addCertification} size="sm">
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Certification
+                        </Button>
+                      </div>
+                      {resumeData.certifications.map((cert, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex justify-between items-start mb-4">
+                            <h4 className="text-md font-medium">Certification #{index + 1}</h4>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeCertification(index)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <Label>Certification Name</Label>
+                              <Input
+                                value={cert.name || ''}
+                                onChange={(e) => handleCertificationsChange(index, 'name', e.target.value)}
+                                placeholder="AWS Certified Solutions Architect"
+                              />
+                            </div>
+                            <div>
+                              <Label>Issuing Organization</Label>
+                              <Input
+                                value={cert.issuer || ''}
+                                onChange={(e) => handleCertificationsChange(index, 'issuer', e.target.value)}
+                                placeholder="Amazon Web Services"
+                              />
+                            </div>
+                            <div>
+                              <Label>Date Obtained</Label>
+                              <Input
+                                value={cert.date || ''}
+                                onChange={(e) => handleCertificationsChange(index, 'date', e.target.value)}
+                                placeholder="January 2024"
+                              />
+                            </div>
+                            <div>
+                              <Label>Verification Link (Optional)</Label>
+                              <Input
+                                value={cert.link || ''}
+                                onChange={(e) => handleCertificationsChange(index, 'link', e.target.value)}
+                                placeholder="https://example.com/verify"
+                              />
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Languages Section */}
                   {activeSection === 'languages' && (
                     <div className="space-y-6">
@@ -1275,7 +2049,7 @@ export default function EditResumePage() {
               /* Template Preview */
               <div className="bg-white rounded-lg shadow-lg">
                 {TemplateComponent ? (
-                  <TemplateComponent data={resumeData} templateId={templateId} />
+                  <TemplateComponent data={transformDataForTemplate(resumeData)} templateId={templateId} />
                 ) : (
                   <div className="p-8 text-center">
                     <p className="text-gray-600">Template not found</p>
@@ -1286,6 +2060,9 @@ export default function EditResumePage() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
