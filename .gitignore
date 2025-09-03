@@ -30,3 +30,7 @@ next-env.d.ts
 # Google OAuth credentials
 client_secret_*.json
 *.json
+
+node_modules
+package-lock.json
+pnpm-lock.yaml
