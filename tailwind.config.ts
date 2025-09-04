@@ -13,6 +13,12 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
+  			brand: {
+  				navy: '#003092',
+  				teal: '#00879E',
+  				accent: '#D4AF37',
+  				bg: '#FAFAF5',
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

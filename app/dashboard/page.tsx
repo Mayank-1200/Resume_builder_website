@@ -267,7 +267,7 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Enhanced sidebar with smart suggestions */}
+        {/* Enhanced sidebar */}
         <div className="space-y-6">
           {/* Tip of the day */}
           <Card className="border-amber-200 hover:shadow-md transition-shadow duration-200">
@@ -283,33 +283,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Smart Suggestions */}
-          <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-md transition-all duration-200">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-blue-800">Smart Suggestions</h3>
-              </div>
-              <div className="space-y-2 text-sm text-blue-700">
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p>Your "Software Engineer" resume hasn't been updated in 2 weeks</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p>Consider adding recent projects to stay current</p>
-                </div>
-              </div>
-              <Button 
-                onClick={() => router.push('/create-resume')}
-                size="sm" 
-                variant="outline" 
-                className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100 transition-colors duration-200"
-              >
-                Update Now
-              </Button>
-            </CardContent>
-          </Card>
+          {/* (Smart Suggestions removed) */}
         </div>
       </section>
       

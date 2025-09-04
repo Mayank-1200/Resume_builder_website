@@ -1168,10 +1168,23 @@ export default function EditResumePage() {
     });
   };
 
+  const handleExport = async () => {
+    // Ensure preview is visible so we print the rendered resume
+    if (!showPreview) {
+      setShowPreview(true);
+      // Wait for preview to render
+      setTimeout(() => {
+        window.print();
+      }, 0);
+      return;
+    }
+    window.print();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-10">
+      <div className="bg-white shadow-sm border-b sticky top-0 z-10 no-print">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -1204,7 +1217,7 @@ export default function EditResumePage() {
                 <Eye className="w-4 h-4" />
                 <span>{showPreview ? 'Hide Preview' : 'Preview'}</span>
               </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" className="flex items-center space-x-2" onClick={handleExport}>
                 <Download className="w-4 h-4" />
                 <span>Export</span>
               </Button>
@@ -1224,7 +1237,7 @@ export default function EditResumePage() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 no-print">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Sections</CardTitle>
@@ -1256,7 +1269,7 @@ export default function EditResumePage() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {!showPreview ? (
-              <Card>
+              <Card className="no-print">
                 <CardHeader>
                   <CardTitle>{sections.find(s => s.id === activeSection)?.label}</CardTitle>
                 </CardHeader>
@@ -2047,7 +2060,7 @@ export default function EditResumePage() {
               </Card>
             ) : (
               /* Template Preview */
-              <div className="bg-white rounded-lg shadow-lg">
+              <div className="bg-white rounded-lg shadow-lg print-area">
                 {TemplateComponent ? (
                   <TemplateComponent data={transformDataForTemplate(resumeData)} templateId={templateId} />
                 ) : (
@@ -2062,7 +2075,9 @@ export default function EditResumePage() {
       </div>
       
       {/* Footer */}
-      <Footer />
+      <div className="no-print">
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -76,7 +76,7 @@ const ProfessionalResume = () => {
           }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-lg font-semibold text-[rgb(0,48,146)] mb-3 border-b-2 border-[rgb(255,171,91)] pb-1">
+          <h2 className="text-lg font-semibold text-brand-navy mb-3 border-b-2 border-brand-accent pb-1">
             Skills
           </h2>
           <div className="space-y-2">
@@ -91,7 +91,7 @@ const ProfessionalResume = () => {
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ delay: index * 0.2, duration: 1, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-[rgb(0,135,158)] to-[rgb(255,171,91)] h-1.5 rounded-full"
+                    className="bg-gradient-to-r from-brand-teal to-brand-accent h-1.5 rounded-full"
                   />
                 </div>
               </div>
@@ -107,7 +107,7 @@ const ProfessionalResume = () => {
           }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-lg font-semibold text-[rgb(0,48,146)] mb-2 border-b-2 border-[rgb(255,171,91)] pb-1">
+          <h2 className="text-lg font-semibold text-brand-navy mb-2 border-b-2 border-brand-accent pb-1">
             Education
           </h2>
           <div>
@@ -169,16 +169,16 @@ const ModernResume = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-6"
           >
-            <div className="w-16 h-16 bg-[rgb(255,171,91)] rounded-full mx-auto mb-3 flex items-center justify-center">
+            <div className="w-16 h-16 bg-brand-accent rounded-full mx-auto mb-3 flex items-center justify-center">
               <span className="text-[rgb(0,48,146)] font-bold text-lg">MJ</span>
             </div>
             <h1 className="text-lg font-bold">Michael Johnson</h1>
-            <p className="text-[rgb(255,171,91)] text-sm">Product Designer</p>
+            <p className="text-brand-accent text-sm">Product Designer</p>
           </motion.div>
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-[rgb(255,171,91)] font-semibold text-sm mb-2 flex items-center">
+              <h3 className="text-brand-accent font-semibold text-sm mb-2 flex items-center">
                 <Mail className="w-3 h-3 mr-2" />
                 CONTACT
               </h3>
@@ -190,7 +190,7 @@ const ModernResume = () => {
             </div>
 
             <div>
-              <h3 className="text-[rgb(255,171,91)] font-semibold text-sm mb-2">SKILLS</h3>
+              <h3 className="text-brand-accent font-semibold text-sm mb-2">SKILLS</h3>
               <div className="space-y-2">
                 {Object.entries(skillProgress).map(([skill, progress], index) => (
                   <div key={skill}>
@@ -203,7 +203,7 @@ const ModernResume = () => {
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ delay: index * 0.3, duration: 1.2, ease: "easeOut" }}
-                        className="bg-[rgb(255,171,91)] h-1 rounded-full"
+                        className="bg-brand-accent h-1 rounded-full"
                       />
                     </div>
                   </div>
@@ -225,7 +225,7 @@ const ModernResume = () => {
         >
           <div>
             <h2 className="text-[rgb(0,48,146)] font-bold text-sm mb-2 flex items-center">
-              <Briefcase className="w-3 h-3 mr-2 text-[rgb(255,171,91)]" />
+              <Briefcase className="w-3 h-3 mr-2 text-brand-accent" />
               EXPERIENCE
             </h2>
             <div className="space-y-3">
@@ -238,11 +238,11 @@ const ModernResume = () => {
                 <p className="text-xs text-gray-500 mb-1">DesignCo • 2022 - Present</p>
                 <ul className="text-xs text-gray-600 space-y-1">
                   <li className="flex items-start">
-                    <span className="w-1 h-1 bg-[rgb(255,171,91)] rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                    <span className="w-1 h-1 bg-brand-accent rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                     <span>Led design system implementation</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="w-1 h-1 bg-[rgb(255,171,91)] rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                    <span className="w-1 h-1 bg-brand-accent rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                     <span>Increased user engagement by 60%</span>
                   </li>
                 </ul>
@@ -252,7 +252,7 @@ const ModernResume = () => {
 
           <div>
             <h2 className="text-[rgb(0,48,146)] font-bold text-sm mb-2 flex items-center">
-              <GraduationCap className="w-3 h-3 mr-2 text-[rgb(255,171,91)]" />
+              <GraduationCap className="w-3 h-3 mr-2 text-brand-accent" />
               EDUCATION
             </h2>
             <motion.div
@@ -324,7 +324,7 @@ const AnimatedResumeRotator = () => {
       <motion.div
         animate={{ y: [-10, 10, -10] }}
         transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-        className="absolute -top-4 -right-4 bg-green-500 text-white p-2 rounded-full shadow-lg"
+        className="absolute top-3 right-3 bg-green-500 text-white p-2 rounded-full shadow-lg"
       >
         <CheckCircle className="w-4 h-4" />
       </motion.div>
@@ -332,7 +332,7 @@ const AnimatedResumeRotator = () => {
       <motion.div
         animate={{ y: [10, -10, 10] }}
         transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
-        className="absolute -bottom-4 -left-4 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] p-2 rounded-full shadow-lg"
+        className="absolute bottom-3 left-3 bg-brand-accent text-brand-navy p-2 rounded-full shadow-lg"
       >
         <Zap className="w-4 h-4" />
       </motion.div>
@@ -342,14 +342,105 @@ const AnimatedResumeRotator = () => {
         <div className="flex space-x-2">
           <div
             className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              currentResume === 0 ? "bg-[rgb(255,171,91)]" : "bg-gray-300"
+              currentResume === 0 ? "bg-brand-accent" : "bg-gray-300"
             }`}
           />
           <div
             className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              currentResume === 1 ? "bg-[rgb(255,171,91)]" : "bg-gray-300"
+              currentResume === 1 ? "bg-brand-accent" : "bg-gray-300"
             }`}
           />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Hero Templates Carousel using real template images
+const TemplateImageCarousel = () => {
+  const templates = [
+    { title: "Modern ATS", src: "/modern-ats.jpg" },
+    { title: "Modern Sidebar", src: "/modern-sidebar.jpg" },
+    { title: "Minimalist Tech", src: "/minimalist-tech.jpg" },
+    { title: "Creative Designer", src: "/creative-designer.jpg" },
+    { title: "Classic Executive", src: "/classic-executive.jpg" },
+  ]
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((prev) => (prev + 1) % templates.length)
+    }, 3500)
+    return () => clearInterval(id)
+  }, [])
+
+  const visible = [
+    (index + templates.length - 1) % templates.length,
+    index,
+    (index + 1) % templates.length,
+  ]
+
+  return (
+    <div className="relative w-full max-w-xl mx-auto">
+      <div className="relative h-[460px]">
+        {templates.map((t, i) => {
+          const position = visible.indexOf(i)
+          const isCenter = position === 1
+          return (
+            <motion.div
+              key={t.src}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 0.9, x: 40 }}
+              animate={{
+                opacity: isCenter ? 1 : 0.6,
+                scale: isCenter ? 1 : 0.9,
+                x: position === 0 ? -140 : position === 2 ? 140 : 0,
+                zIndex: isCenter ? 30 : position === 0 ? 20 : 10,
+              }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <div className={`relative h-full rounded-xl shadow-2xl overflow-hidden border ${
+                isCenter ? "border-brand-accent/40" : "border-transparent"
+              }`}>
+                <Image
+                  src={t.src}
+                  alt={t.title}
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 768px) 80vw, 460px"
+                  priority={i < 2}
+                />
+              </div>
+            </motion.div>
+          )
+        })}
+      </div>
+
+      <motion.div
+        animate={{ y: [-10, 10, -10] }}
+        transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+        className="absolute -top-8 -right-8 bg-green-500 text-white p-2 rounded-full shadow-lg"
+      >
+        <CheckCircle className="w-4 h-4" />
+      </motion.div>
+      <motion.div
+        animate={{ y: [10, -10, 10] }}
+        transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
+        className="absolute -bottom-8 -left-8 bg-brand-accent text-brand-navy p-2 rounded-full shadow-lg"
+      >
+        <Zap className="w-4 h-4" />
+      </motion.div>
+
+      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="flex space-x-2">
+          {templates.map((_, i) => (
+            <div
+              key={i}
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                i === index ? "bg-brand-accent" : "bg-gray-300"
+              }`}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -389,7 +480,7 @@ export default function LandingPage() {
           }
         } else {
           if (displayText.length > 0) {
-            setDisplayText(currentFullText.slice(0, -1))
+            setDisplayText(displayText.slice(0, displayText.length - 1))
           } else {
             setIsDeleting(false)
             setCurrentTextIndex((prev) => (prev + 1) % typingTexts.length)
@@ -405,7 +496,7 @@ export default function LandingPage() {
   // Show loading state until page is ready
   if (!isPageReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-bg/30 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[rgb(0,48,146)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-[rgb(0,48,146)] text-lg font-semibold">Loading...</p>
@@ -466,44 +557,29 @@ export default function LandingPage() {
   ]
 
   const sampleResumes = [
-    {
-      title: "Modern Professional",
-      category: "Modern",
-      image: "/placeholder.svg?height=400&width=300&text=Modern+Resume",
-    },
-    {
-      title: "Classic Executive",
-      category: "Classic",
-      image: "/placeholder.svg?height=400&width=300&text=Classic+Resume",
-    },
-    {
-      title: "Creative Designer",
-      category: "Creative",
-      image: "/placeholder.svg?height=400&width=300&text=Creative+Resume",
-    },
-    {
-      title: "Tech Specialist",
-      category: "Modern",
-      image: "/placeholder.svg?height=400&width=300&text=Tech+Resume",
-    },
+    { title: "Modern ATS", category: "Modern", image: "/modern-ats.jpg" },
+    { title: "Modern Sidebar", category: "Modern", image: "/modern-sidebar.jpg" },
+    { title: "Minimalist Tech", category: "Minimal", image: "/minimalist-tech.jpg" },
+    { title: "Creative Designer", category: "Creative", image: "/creative-designer.jpg" },
+    { title: "Classic Executive", category: "Classic", image: "/classic-executive.jpg" },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[rgb(255,242,219)]/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-bg/30">
   {/* Header removed: now handled globally by Navbar component */}
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 lg:py-20">
+      <section className="relative overflow-hidden py-10 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-8 pt-8 lg:pt-16"
+              className="space-y-8 pt-2 lg:pt-6"
             >
               <div className="space-y-4">
-                <Badge className="bg-[rgb(255,242,219)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)] border border-[rgb(255,171,91)]">
+                <Badge className="bg-brand-bg text-brand-navy hover:bg-brand-bg border border-brand-accent">
                   ✨ Create Professional Resumes in Minutes
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-[rgb(0,48,146)] leading-tight">
@@ -527,7 +603,7 @@ export default function LandingPage() {
                   <Link href="/dashboard">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-lg px-8 py-6"
+                      className="bg-gradient-to-r from-brand-navy to-brand-teal hover:from-brand-teal hover:to-brand-accent text-lg px-8 py-6"
                     >
                       Go to Dashboard
                       <ArrowRight className="ml-2 w-5 h-5" />
@@ -537,32 +613,24 @@ export default function LandingPage() {
                   <Link href="/signup">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-lg px-8 py-6"
+                      className="bg-gradient-to-r from-brand-navy to-brand-teal hover:from-brand-teal hover:to-brand-accent text-lg px-8 py-6"
                     >
                       Create My Resume
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
                 )}
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="text-lg px-8 py-6 border-[rgb(255,171,91)] text-[rgb(0,135,158)] hover:bg-[rgb(255,242,219)]/50 bg-transparent"
-                >
-                  View Templates
-                </Button>
+                <Link href="/templates">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="text-lg px-8 py-6 border-brand-accent text-brand-teal hover:bg-brand-bg/50 bg-transparent"
+                  >
+                    View Templates
+                  </Button>
+                </Link>
               </div>
 
-              <div className="flex items-center space-x-8 text-sm text-gray-500">
-                <div className="flex items-center space-x-2">
-                  <Users className="w-4 h-4" />
-                  <span>50K+ users</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span>4.9/5 rating</span>
-                </div>
-              </div>
             </motion.div>
 
             <motion.div
@@ -570,9 +638,9 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative pt-8"
+              className="relative pt-0"
             >
-              <AnimatedResumeRotator />
+              <TemplateImageCarousel />
             </motion.div>
           </div>
         </div>
@@ -603,10 +671,10 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-[rgb(255,171,91)]/20">
+                <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-brand-accent/20">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-[rgb(255,171,91)]/20 to-[rgb(255,242,219)]/50 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-brand-accent/20 to-brand-bg/50 rounded-lg flex items-center justify-center">
                         <benefit.icon className="w-6 h-6 text-[rgb(0,135,158)]" />
                       </div>
                       <h3 className="text-xl font-semibold text-[rgb(0,48,146)]">{benefit.title}</h3>
@@ -621,7 +689,7 @@ export default function LandingPage() {
       </section>
 
       {/* Sample Resume Preview */}
-      <section className="py-20 bg-gradient-to-r from-[rgb(255,242,219)]/20 to-[rgb(255,171,91)]/10">
+      <section className="py-20 bg-gradient-to-b from-brand-bg to-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -636,10 +704,11 @@ export default function LandingPage() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Choose from our collection of expertly designed templates
             </p>
+            <div className="h-1 w-16 bg-gradient-to-r from-brand-accent to-brand-teal rounded-full mx-auto mt-4" />
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {sampleResumes.map((resume, index) => (
+            {sampleResumes.slice(0, 4).map((resume, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -649,13 +718,13 @@ export default function LandingPage() {
                 whileHover={{ scale: 1.05 }}
                 className="cursor-pointer"
               >
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-[rgb(255,171,91)]/20">
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-brand-accent/20">
                   <div className="aspect-[3/4] overflow-hidden relative">
                     <Image
                       src={resume.image || "/placeholder.svg"}
                       alt={resume.title}
                       fill
-                      className="object-cover"
+                      className="object-cover object-top"
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 25vw"
                       priority={index < 2}
                       placeholder="blur"
@@ -663,7 +732,7 @@ export default function LandingPage() {
                     />
                   </div>
                   <CardContent className="p-4">
-                    <Badge variant="secondary" className="mb-2 bg-[rgb(255,242,219)] text-[rgb(0,48,146)]">
+                    <Badge variant="secondary" className="mb-2 bg-brand-bg text-brand-navy">
                       {resume.category}
                     </Badge>
                     <h3 className="font-semibold text-[rgb(0,48,146)]">{resume.title}</h3>
@@ -706,7 +775,7 @@ export default function LandingPage() {
                     {step.number}
                   </div>
                   {index < steps.length - 1 && (
-                    <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-[rgb(255,171,91)]/30 -translate-y-0.5" />
+                    <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-brand-accent/30 -translate-y-0.5" />
                   )}
                 </div>
                 <h3 className="text-xl font-semibold text-[rgb(0,48,146)] mb-2">{step.title}</h3>
@@ -734,7 +803,7 @@ export default function LandingPage() {
                 <Link href="/dashboard">
                   <Button
                     size="lg"
-                    className="text-lg px-8 py-6 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)]"
+                    className="text-lg px-8 py-6 bg-brand-accent text-brand-navy hover:bg-brand-bg"
                   >
                     Go to Dashboard
                   </Button>
@@ -743,7 +812,7 @@ export default function LandingPage() {
                 <Link href="/signup">
                   <Button
                     size="lg"
-                    className="text-lg px-8 py-6 bg-[rgb(255,171,91)] text-[rgb(0,48,146)] hover:bg-[rgb(255,242,219)]"
+                    className="text-lg px-8 py-6 bg-brand-accent text-brand-navy hover:bg-brand-bg"
                   >
                     Start Free
                   </Button>
@@ -806,7 +875,7 @@ export default function LandingPage() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowChat(true)}
-            className="bg-gradient-to-r from-[rgb(0,48,146)] to-[rgb(0,135,158)] hover:from-[rgb(0,135,158)] hover:to-[rgb(255,171,91)] text-white p-4 rounded-full shadow-lg"
+            className="bg-gradient-to-r from-brand-navy to-brand-teal hover:from-brand-teal hover:to-brand-accent text-white p-4 rounded-full shadow-lg"
           >
             <MessageCircle className="w-6 h-6" />
           </motion.button>

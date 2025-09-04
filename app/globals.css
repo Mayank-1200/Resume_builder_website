@@ -10,6 +10,11 @@
 
 @layer base {
   :root {
+    /* Brand palette */
+    --brand-navy: 221 100% 29%;          /* #003092 */
+    --brand-teal: 188 100% 31%;          /* #00879E */
+    --brand-accent: 46 65% 53%;          /* #D4AF37 */
+    --brand-bg: 60 20% 97%;              /* #FAFAF5 */
     --background: 222 47% 97%;           /* #f9fafb */
     --foreground: 222 47% 7%;            /* #111827 */
     --card: 0 0% 100%;
@@ -86,5 +91,24 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+  html, body { background: #ffffff !important; }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+  }
+  @page {
+    size: A4;
+    margin: 12mm;
   }
 }
