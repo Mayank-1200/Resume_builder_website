@@ -76,16 +76,14 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
   };
 
   return (
-    <div className="bg-white text-gray-900 font-mono max-w-4xl mx-auto p-8 shadow-lg print:shadow-none print:p-0">
+    <div className="bg-white text-gray-900 font-mono max-w-4xl mx-auto p-8 shadow-lg print:shadow-none print:p-0 print-area">
       {/* Header Section */}
       <header className="border-b border-gray-300 pb-6 mb-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">
             {data.personalInfo.firstName} {data.personalInfo.lastName}
           </h1>
-          <p className="text-base text-gray-600 mb-4 max-w-2xl mx-auto leading-relaxed">
-            {data.personalInfo.summary}
-          </p>
+          {/* Summary is shown in a dedicated section below */}
           
           {/* Contact Information */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-700">
@@ -122,6 +120,17 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
           </div>
         </div>
       </header>
+
+      {data.personalInfo.summary && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
+            Professional Summary
+          </h2>
+          <p className="text-gray-700 text-sm leading-relaxed">
+            {data.personalInfo.summary}
+          </p>
+        </section>
+      )}
 
       {/* Professional Experience */}
       {data.experience && data.experience.length > 0 && (
@@ -191,8 +200,11 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
                   {edu.gpa && (
                     <span className="font-mono">GPA: {edu.gpa}</span>
                   )}
-                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
-                    <span className="font-mono">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
+                  {(
+                    (Array.isArray(edu.honors) && edu.honors.length > 0) ||
+                    (typeof (edu as any).honors === 'string' && (edu as any).honors.trim().length > 0)
+                  ) && (
+                    <span className="font-mono">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : (edu as any).honors}</span>
                   )}
                 </div>
               </div>
@@ -235,20 +247,26 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
                   <h3 className="text-lg font-bold text-gray-900">
                     {project.name}
                   </h3>
-                  <span className="text-sm text-gray-600 font-mono">
-                    {formatDateRange(project.startDate, project.endDate, false)}
-                  </span>
-                </div>
-                <p className="text-gray-700 text-sm mb-3 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span key={techIndex} className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">
-                      {tech}
+                  {(project.startDate || project.endDate) && (
+                    <span className="text-sm text-gray-600 font-mono">
+                      {formatDateRange(project.startDate, project.endDate, false)}
                     </span>
-                  ))}
+                  )}
                 </div>
+                {project.description && (
+                  <p className="text-gray-700 text-sm mb-3 leading-relaxed">
+                    {project.description}
+                  </p>
+                )}
+                {project.technologies && project.technologies.some(t => t && t.trim().length > 0) && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {project.technologies.filter(t => t && t.trim().length > 0).map((tech, techIndex) => (
+                      <span key={techIndex} className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {project.link && (
                   <p className="text-sm text-blue-600">
                     🔗 <a href={project.link} target="_blank" rel="noopener noreferrer" className="underline">
@@ -307,7 +325,7 @@ export default function MinimalistTechTemplate({ data, templateId }: MinimalistT
       )}
 
       {/* Footer */}
-      <footer className="text-center text-sm text-gray-500 mt-12 pt-6 border-t border-gray-200 font-mono">
+      <footer className="text-center text-sm text-gray-500 mt-12 pt-6 border-t border-gray-200 font-mono no-print">
         <p>Generated with Resume Builder • Template: {templateId}</p>
       </footer>
     </div>

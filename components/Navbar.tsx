@@ -67,7 +67,7 @@ export default function SiteNavbar() {
     <header
       className={`sticky top-0 z-50 border-b transition-shadow ${
         scrolled ? "shadow-sm" : "shadow-none"
-      } bg-white/80 backdrop-blur-md`}
+      } bg-white/80 backdrop-blur-md no-print`}
       role="banner"
     >
       <a

@@ -88,7 +88,7 @@ const ModernSidebarTemplate: React.FC<TemplateProps> = ({ data, templateId }) =>
   );
 
   return (
-    <div className="font-sans text-gray-900 bg-white min-h-screen flex shadow-lg max-w-5xl mx-auto my-8">
+    <div className="font-sans text-gray-900 bg-white min-h-screen flex shadow-lg max-w-5xl mx-auto my-8 print-area">
       {/* Left Sidebar */}
       <div className="w-1/3 bg-gray-900 text-white p-8 flex flex-col">
         {/* Name and Title */}
@@ -187,6 +187,7 @@ const ModernSidebarTemplate: React.FC<TemplateProps> = ({ data, templateId }) =>
                   <h3 className="font-bold text-blue-300 text-base">{edu.degree}</h3>
                   <p className="text-gray-400">{edu.institution}</p>
                   <p className="text-gray-400">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</p>
+                  {edu.location && <p className="text-gray-400">{edu.location}</p>}
                   {edu.gpa && <p className="text-gray-400">GPA: {edu.gpa}</p>}
                   {edu.honors && <p className="text-gray-400">{edu.honors}</p>}
                 </div>
@@ -278,15 +279,18 @@ const ModernSidebarTemplate: React.FC<TemplateProps> = ({ data, templateId }) =>
               {data.projects.map((project, index) => (
                 <div key={index}>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{project.name}</h3>
-                  <p className="text-gray-600 text-lg mb-3">
-                    {project.startDate && project.endDate ? `${formatDate(project.startDate)} - ${formatDate(project.endDate)} | ` : ''}
-                    {project.technologies.join(', ')}
-                    {project.link && (
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline ml-2">
-                        (Link)
-                      </a>
-                    )}
-                  </p>
+                  {(project.startDate || project.endDate || (project.technologies && project.technologies.some(t => t && t.trim().length > 0)) || project.link) && (
+                    <p className="text-gray-600 text-lg mb-3">
+                      {(project.startDate || project.endDate) && `${formatDate(project.startDate)} - ${formatDate(project.endDate)}`}
+                      {(project.startDate || project.endDate) && (project.technologies && project.technologies.some(t => t && t.trim().length > 0)) && ' | '}
+                      {project.technologies && project.technologies.filter(t => t && t.trim().length > 0).join(', ')}
+                      {project.link && (
+                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline ml-2">
+                          (Link)
+                        </a>
+                      )}
+                    </p>
+                  )}
                   <p className="text-gray-700 leading-relaxed text-lg">{project.description}</p>
                 </div>
               ))}
@@ -294,6 +298,10 @@ const ModernSidebarTemplate: React.FC<TemplateProps> = ({ data, templateId }) =>
           </div>
         )}
       </div>
+      {/* Footer */}
+      <footer className="text-center text-sm text-gray-500 mt-12 pt-6 border-t border-gray-200 no-print w-full">
+        <p>Generated with Resume Builder • Template: {templateId}</p>
+      </footer>
     </div>
   );
 };

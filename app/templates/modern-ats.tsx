@@ -60,13 +60,23 @@ interface ResumeData {
 interface ModernATSTemplateProps {
   data: ResumeData;
   templateId: string;
+  skillsHeading?: string;
 }
 
-export default function ModernATSTemplate({ data, templateId }: ModernATSTemplateProps) {
+export default function ModernATSTemplate({ data, templateId, skillsHeading }: ModernATSTemplateProps) {
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
+  const renderDegreeAndField = (degree: string, field: string) => {
+    const hasField = !!field && field.trim().length > 0;
+    const degreeLower = (degree || '').toLowerCase();
+    if (!hasField) return degree;
+    // If the degree already contains " in " (e.g., "BSc in CS"), avoid adding another 'in'
+    if (degreeLower.includes(' in ')) return degree;
+    return `${degree} in ${field}`;
   };
 
   const formatDateRange = (startDate: string, endDate: string, current: boolean) => {
@@ -76,15 +86,14 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
   };
 
   return (
-    <div className="bg-white text-gray-900 font-sans max-w-4xl mx-auto p-8 shadow-lg print:shadow-none print:p-0">
+    <div className="bg-white text-gray-900 font-sans max-w-4xl mx-auto p-8 shadow-lg print:shadow-none print:p-0 print-area">
       {/* Header Section */}
       <header className="border-b-2 border-blue-600 pb-6 mb-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {data.personalInfo.firstName} {data.personalInfo.lastName}
           </h1>
-          <p className="text-lg text-gray-600 mb-4">{data.personalInfo.summary}</p>
-          
+          {/* Removed summary from header; shown in its own section below */}
           {/* Contact Information */}
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-700">
             {data.personalInfo.email && (
@@ -121,6 +130,16 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
         </div>
       </header>
 
+      {/* Professional Summary */}
+      {data.personalInfo.summary && (
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-4">
+            PROFESSIONAL SUMMARY
+          </h2>
+          <p className="text-gray-700 text-base leading-relaxed">{data.personalInfo.summary}</p>
+        </section>
+      )}
+
       {/* Professional Experience */}
       {data.experience && data.experience.length > 0 && (
         <section className="mb-8">
@@ -134,17 +153,19 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
                   <h3 className="text-xl font-semibold text-gray-900">
                     {exp.position}
                   </h3>
-                  <span className="text-sm text-gray-600 font-medium">
+                </div>
+                <div className="ats-row flex flex-col md:flex-row md:items-center md:justify-between print:flex-row print:items-center print:justify-between mb-3">
+                  <div className="ats-left flex items-center gap-3">
+                    <p className="text-lg font-medium text-blue-600">
+                      {exp.company}
+                    </p>
+                    {exp.location && (
+                      <p className="text-sm text-gray-600">{exp.location}</p>
+                    )}
+                  </div>
+                  <span className="ats-date text-sm text-gray-600 font-medium md:ml-auto print:ml-auto">
                     {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                   </span>
-                </div>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
-                  <p className="text-lg font-medium text-blue-600">
-                    {exp.company}
-                  </p>
-                  {exp.location && (
-                    <p className="text-sm text-gray-600">{exp.location}</p>
-                  )}
                 </div>
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
                   {exp.description.map((desc, descIndex) => (
@@ -170,26 +191,33 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
               <div key={index} className="mb-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    {edu.degree} in {edu.field}
+                    {renderDegreeAndField(edu.degree, edu.field)}
                   </h3>
-                  <span className="text-sm text-gray-600 font-medium">
+                </div>
+                <div className="ats-row flex flex-col md:flex-row md:items-center md:justify-between print:flex-row print:items-center print:justify-between mb-2">
+                  <div className="ats-left flex items-center gap-3">
+                    <p className="text-lg font-medium text-blue-600">
+                      {edu.institution}
+                    </p>
+                    {edu.location && (
+                      <p className="text-sm text-gray-600">{edu.location}</p>
+                    )}
+                  </div>
+                  <span className="ats-date text-sm text-gray-600 font-medium md:ml-auto print:ml-auto">
                     {formatDateRange(edu.startDate, edu.endDate, edu.current)}
                   </span>
-                </div>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                  <p className="text-lg font-medium text-blue-600">
-                    {edu.institution}
-                  </p>
-                  {edu.location && (
-                    <p className="text-sm text-gray-600">{edu.location}</p>
-                  )}
                 </div>
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                   {edu.gpa && (
                     <span>GPA: {edu.gpa}</span>
                   )}
-                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
-                    <span>Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
+                  {(
+                    (Array.isArray(edu.honors) && edu.honors.length > 0) ||
+                    (typeof (edu as any).honors === 'string' && (edu as any).honors.trim().length > 0)
+                  ) && (
+                    <span>
+                      Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : (edu as any).honors}
+                    </span>
                   )}
                 </div>
               </div>
@@ -202,7 +230,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       {data.skills && data.skills.length > 0 && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2 mb-6">
-            TECHNICAL SKILLS
+            {skillsHeading ?? 'TECHNICAL SKILLS'}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {data.skills.map((skillGroup, index) => (
@@ -228,24 +256,30 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
           <div className="space-y-4">
             {data.projects.map((project, index) => (
               <div key={index} className="mb-4">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="ats-row flex flex-col md:flex-row md:items-center md:justify-between print:flex-row print:items-center print:justify-between mb-2">
+                  <h3 className="ats-left text-lg font-semibold text-gray-900">
                     {project.name}
                   </h3>
-                  <span className="text-sm text-gray-600">
-                    {formatDateRange(project.startDate, project.endDate, false)}
-                  </span>
-                </div>
-                <p className="text-gray-700 text-sm mb-2 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span key={techIndex} className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                      {tech}
+                  {(project.startDate || project.endDate) && (
+                    <span className="ats-date text-sm text-gray-600 md:ml-auto print:ml-auto">
+                      {formatDateRange(project.startDate, project.endDate, false)}
                     </span>
-                  ))}
+                  )}
                 </div>
+                {project.description && (
+                  <p className="text-gray-700 text-sm mb-2 leading-relaxed">
+                    {project.description}
+                  </p>
+                )}
+                {project.technologies && project.technologies.some(t => t && t.trim().length > 0) && (
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {project.technologies.filter(t => t && t.trim().length > 0).map((tech, techIndex) => (
+                      <span key={techIndex} className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {project.link && (
                   <p className="text-sm text-blue-600 mt-2">
                     🔗 <a href={project.link} target="_blank" rel="noopener noreferrer">
@@ -268,11 +302,15 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {data.certifications.map((cert, index) => (
               <div key={index} className="mb-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {cert.name}
-                </h3>
+                <div className="ats-row flex flex-col md:flex-row md:items-center md:justify-between print:flex-row print:items-center print:justify-between mb-1">
+                  <h3 className="ats-left text-lg font-semibold text-gray-900">
+                    {cert.name}
+                  </h3>
+                  {cert.date && (
+                    <span className="ats-date text-sm text-gray-600 md:ml-auto print:ml-auto">{cert.date}</span>
+                  )}
+                </div>
                 <p className="text-blue-600 font-medium">{cert.issuer}</p>
-                <p className="text-sm text-gray-600">{cert.date}</p>
                 {cert.link && (
                   <p className="text-sm text-blue-600">
                     🔗 <a href={cert.link} target="_blank" rel="noopener noreferrer">
@@ -304,7 +342,7 @@ export default function ModernATSTemplate({ data, templateId }: ModernATSTemplat
       )}
 
       {/* Footer */}
-      <footer className="text-center text-sm text-gray-500 mt-12 pt-6 border-t border-gray-200">
+      <footer className="text-center text-sm text-gray-500 mt-12 pt-6 border-t border-gray-200 no-print">
         <p>Generated with Resume Builder • Template: {templateId}</p>
       </footer>
     </div>

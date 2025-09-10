@@ -470,6 +470,7 @@ export default function EditResumePage() {
   const [showSkillSelector, setShowSkillSelector] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState<string>('');
   const [selectedSkillCategories, setSelectedSkillCategories] = useState<string[]>([]);
+  const [skillsHeading, setSkillsHeading] = useState<string>('Technical Skills');
 
   const templateId = params.templateId as string;
 
@@ -941,7 +942,8 @@ export default function EditResumePage() {
         phone: data.personalInfo?.phone || '',
         location: data.personalInfo?.location || '',
         linkedin: data.personalInfo?.linkedin || '',
-        website: data.personalInfo?.website || ''
+        website: data.personalInfo?.website || '',
+        summary: data.personalInfo?.summary || ''
       },
       summary: data.personalInfo?.summary || '',
       experience: (data.experience || []).map(exp => ({
@@ -1503,6 +1505,20 @@ export default function EditResumePage() {
                         </div>
                       </div>
 
+                      {/* Custom heading for Modern ATS */}
+                      {isModernATS && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <Label>Skills Section Heading</Label>
+                            <Input
+                              value={skillsHeading}
+                              onChange={(e) => setSkillsHeading(e.target.value)}
+                              placeholder="Technical Skills"
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       {/* Modern Sidebar Template - Proficiency Circles Info */}
                       {isModernSidebar && (
                         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
@@ -1758,6 +1774,14 @@ export default function EditResumePage() {
                                   placeholder="Bachelor's"
                                 />
                               </div>
+                            </div>
+                            <div>
+                              <Label>Location</Label>
+                              <Input
+                                value={edu.location}
+                                onChange={(e) => handleEducationChange(index, 'location', e.target.value)}
+                                placeholder="City, State"
+                              />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -2062,7 +2086,18 @@ export default function EditResumePage() {
               /* Template Preview */
               <div className="bg-white rounded-lg shadow-lg print-area">
                 {TemplateComponent ? (
-                  <TemplateComponent data={transformDataForTemplate(resumeData)} templateId={templateId} />
+                  isModernATS ? (
+                    <ModernATSTemplate 
+                      data={transformDataForTemplate(resumeData)} 
+                      templateId={templateId} 
+                      skillsHeading={skillsHeading || 'Technical Skills'}
+                    />
+                  ) : (
+                    <TemplateComponent 
+                      data={transformDataForTemplate(resumeData)} 
+                      templateId={templateId} 
+                    />
+                  )
                 ) : (
                   <div className="p-8 text-center">
                     <p className="text-gray-600">Template not found</p>

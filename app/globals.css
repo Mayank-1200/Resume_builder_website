@@ -98,14 +98,54 @@
 @media print {
   .no-print { display: none !important; }
   html, body { background: #ffffff !important; }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    overflow: visible !important;
+  }
+  /* Ensure ATS rows align like preview */
+  .ats-row { display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; }
+  .ats-left { flex: 1 1 auto !important; min-width: 0 !important; }
+  .ats-date { margin-left: auto !important; white-space: nowrap !important; }
+  /* Hide everything except the resume area */
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area, .print-area * {
+    visibility: visible !important;
+  }
+  .print-area {
+    position: relative !important;
+  }
+  /* Only print the resume content */
+  main, section, div, header, footer, nav, aside {
+    background: transparent !important;
+  }
   .print-area {
     box-shadow: none !important;
     border: none !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 210mm;
+    min-height: calc(297mm - 24mm);
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  /* Let content flow; only avoid breaks in small units */
+  .print-area { page-break-inside: auto; }
+  .print-area section,
+  .print-area article,
+  .print-area div { 
+    break-inside: auto; 
+    page-break-inside: auto; 
+  }
+  .print-area li { 
+    break-inside: avoid; 
+    page-break-inside: avoid; 
+  }
+  .print-area h1, .print-area h2, .print-area h3 {
+    page-break-after: avoid;
   }
   @page {
     size: A4;

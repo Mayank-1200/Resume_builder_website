@@ -76,7 +76,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
   };
 
   return (
-    <div className="bg-white text-gray-900 font-serif max-w-4xl mx-auto p-10 shadow-lg print:shadow-none print:p-0">
+    <div className="bg-white text-gray-900 font-serif max-w-4xl mx-auto p-10 shadow-lg print:shadow-none print:p-0 print-area">
       {/* Header Section */}
       <header className="text-center border-b-4 border-gray-800 pb-8 mb-10">
         <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-wide">
@@ -126,7 +126,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       {data.personalInfo.summary && (
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-400 pb-3 mb-4">
-            EXECUTIVE SUMMARY
+            PROFESSIONAL SUMMARY
           </h2>
           <p className="text-gray-700 text-lg leading-relaxed text-justify">
             {data.personalInfo.summary}
@@ -201,8 +201,11 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
                   {edu.gpa && (
                     <span className="font-medium">GPA: {edu.gpa}</span>
                   )}
-                                      {Array.isArray(edu.honors) && edu.honors.length > 0 && (
-                    <span className="font-medium">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : edu.honors || ''}</span>
+                  {(
+                    (Array.isArray(edu.honors) && edu.honors.length > 0) ||
+                    (typeof (edu as any).honors === 'string' && (edu as any).honors.trim().length > 0)
+                  ) && (
+                    <span className="font-medium">Honors: {Array.isArray(edu.honors) ? edu.honors.join(', ') : (edu as any).honors}</span>
                   )}
                 </div>
               </div>
@@ -245,20 +248,26 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
                   <h3 className="text-lg font-bold text-gray-900">
                     {project.name}
                   </h3>
-                  <span className="text-sm text-gray-600">
-                    {formatDateRange(project.startDate, project.endDate, false)}
-                  </span>
-                </div>
-                <p className="text-gray-700 text-base mb-3 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span key={techIndex} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
-                      {tech}
+                  {(project.startDate || project.endDate) && (
+                    <span className="text-sm text-gray-600">
+                      {formatDateRange(project.startDate, project.endDate, false)}
                     </span>
-                  ))}
+                  )}
                 </div>
+                {project.description && (
+                  <p className="text-gray-700 text-base mb-3 leading-relaxed">
+                    {project.description}
+                  </p>
+                )}
+                {project.technologies && project.technologies.some(t => t && t.trim().length > 0) && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {project.technologies.filter(t => t && t.trim().length > 0).map((tech, techIndex) => (
+                      <span key={techIndex} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {project.link && (
                   <p className="text-sm text-gray-600">
                     🔗 <a href={project.link} target="_blank" rel="noopener noreferrer" className="underline">
@@ -317,7 +326,7 @@ export default function ClassicExecutiveTemplate({ data, templateId }: ClassicEx
       )}
 
       {/* Footer */}
-      <footer className="text-center text-sm text-gray-500 mt-16 pt-8 border-t-2 border-gray-300">
+      <footer className="text-center text-sm text-gray-500 mt-16 pt-8 border-t-2 border-gray-300 no-print">
         <p className="font-medium">Generated with Resume Builder • Template: {templateId}</p>
       </footer>
     </div>

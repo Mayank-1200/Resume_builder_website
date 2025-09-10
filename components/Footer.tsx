@@ -5,7 +5,7 @@ import { ArrowRight, FileText, Github, Linkedin, Mail, Twitter, Globe } from "lu
 
 export default function SiteFooter() {
   return (
-    <footer className="bg-brand-navy text-white">
+    <footer className="bg-brand-navy text-white no-print">
       {/* Pre-footer CTA */}
       <div className="container mx-auto px-4">
         <div className="relative -translate-y-6">
