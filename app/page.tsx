@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { motion, useScroll, useTransform, AnimatePresence, animate } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "../components/ui/button"
+import { Card, CardContent } from "../components/ui/card"
+import { Badge } from "../components/ui/badge"
 import Link from "next/link";
-import { useAuth } from "@/contexts/AuthContext";
-import Footer from "@/components/Footer";
+import { useAuth } from "../contexts/AuthContext";
+import Footer from "../components/Footer";
 import {
   ArrowRight,
   CheckCircle,
