@@ -471,6 +471,14 @@ export default function EditResumePage() {
   const [selectedProfession, setSelectedProfession] = useState<string>('');
   const [selectedSkillCategories, setSelectedSkillCategories] = useState<string[]>([]);
   const [skillsHeading, setSkillsHeading] = useState<string>('Technical Skills');
+  const [jobDescription, setJobDescription] = useState<string>('');
+  const [tailorSuggestions, setTailorSuggestions] = useState<{
+    detectedProfession: string;
+    keywords: string[];
+    suggestedSummary: string;
+    suggestedSkills: Array<{ category: string; skills: { name: string; level: number }[] }>;
+    suggestedExperienceBullets: string[];
+  } | null>(null);
 
   const templateId = params.templateId as string;
 
@@ -905,7 +913,8 @@ export default function EditResumePage() {
     { id: 'skills', label: 'Skills', icon: Award },
     { id: 'projects', label: 'Projects', icon: FileText },
     { id: 'certifications', label: 'Certifications', icon: Award },
-    { id: 'languages', label: 'Languages', icon: Globe }
+    { id: 'languages', label: 'Languages', icon: Globe },
+    { id: 'tailor', label: 'Tailor to Job', icon: FileText }
   ];
 
   // Star rating component for proficiency levels
@@ -1181,6 +1190,126 @@ export default function EditResumePage() {
       return;
     }
     window.print();
+  };
+
+  // Simple job description analyzer
+  const analyzeJobDescription = () => {
+    const text = (jobDescription || '').toLowerCase();
+    if (!text.trim()) {
+      setTailorSuggestions(null);
+      return;
+    }
+
+    const professionOrder = Object.keys(PROFESSION_SKILLS);
+    const detectedProfession = professionOrder.find((prof) => text.includes(prof.toLowerCase())) ||
+      (text.includes('developer') || text.includes('engineer') ? 'Software Engineer' :
+       text.includes('data') ? 'Data Scientist' :
+       text.includes('product') ? 'Product Manager' :
+       text.includes('design') ? 'UX/UI Designer' :
+       text.includes('market') ? 'Marketing Specialist' :
+       text.includes('project') ? 'Project Manager' :
+       text.includes('finance') || text.includes('analyst') ? 'Financial Analyst' :
+       'Software Engineer');
+
+    const professionSkills = getSkillsForProfession(detectedProfession);
+
+    // Build a flat list of candidate skills and categories
+    const categoryToSkills: Array<{ category: string; skills: { name: string; level: number }[] }> = Object.entries(professionSkills).map(([category, skills]) => ({
+      category,
+      skills: (skills as Array<{ name: string; level: number }>),
+    }));
+
+    const allSkillNames = categoryToSkills.flatMap((g) => g.skills.map((s) => s.name));
+
+    const matchedSkills = allSkillNames.filter((name) => text.includes(name.toLowerCase()))
+      // de-duplicate while preserving order
+      .filter((name, idx, arr) => arr.indexOf(name) === idx)
+      .slice(0, 20);
+
+    const selectedGroups: Array<{ category: string; skills: { name: string; level: number }[] }> = [];
+    categoryToSkills.forEach((group) => {
+      const matchedInGroup = group.skills.filter((s) => matchedSkills.map((m) => m.toLowerCase()).includes(s.name.toLowerCase()));
+      if (matchedInGroup.length > 0) {
+        selectedGroups.push({ category: group.category, skills: matchedInGroup });
+      }
+    });
+
+    // Keywords extraction (very naive): top frequent words excluding stopwords
+    const stopwords = new Set(['the','and','to','of','in','a','for','with','on','as','is','are','be','this','that','by','or','an','from','will','you','we','our']);
+    const keywords = text
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length > 2 && !stopwords.has(w))
+      .slice(0, 200);
+
+    const topKeywords = Array.from(
+      keywords.reduce((map, w) => map.set(w, (map.get(w) || 0) + 1), new Map<string, number>())
+    )
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([w]) => w);
+
+    const suggestedSummary = `Results-driven ${detectedProfession.toLowerCase()} with experience aligning to role requirements such as ${topKeywords.slice(0, 5).join(', ')}. Adept at ${matchedSkills.slice(0, 5).join(', ')} with a track record of impact and cross-functional collaboration.`;
+
+    const suggestedExperienceBullets = [
+      `Delivered outcomes related to ${topKeywords.slice(0, 2).join(' and ')} using ${matchedSkills.slice(0, 3).join(', ')}.`,
+      `Collaborated with stakeholders to drive ${topKeywords.slice(2, 4).join(' and ')} initiatives, improving KPIs.`,
+      `Owned end-to-end execution for ${topKeywords[4] || 'key features'}, ensuring quality and timeliness.`,
+    ];
+
+    setTailorSuggestions({
+      detectedProfession,
+      keywords: topKeywords,
+      suggestedSummary,
+      suggestedSkills: selectedGroups,
+      suggestedExperienceBullets,
+    });
+  };
+
+  const applyTailorSuggestions = () => {
+    if (!tailorSuggestions) return;
+    // Merge summary (prepend if empty, otherwise append a sentence)
+    const existingSummary = resumeData.personalInfo.summary || '';
+    const newSummary = existingSummary
+      ? `${existingSummary} ${tailorSuggestions.suggestedSummary}`
+      : tailorSuggestions.suggestedSummary;
+
+    // Merge skills: add new categories or append skills to existing categories, avoid duplicates
+    const existingSkills = [...(resumeData.skills || [])];
+    tailorSuggestions.suggestedSkills.forEach((group) => {
+      const idx = existingSkills.findIndex((g) => (g.category || '').toLowerCase() === group.category.toLowerCase());
+      if (idx === -1) {
+        existingSkills.push({ category: group.category, skills: group.skills });
+      } else {
+        const names = new Set(existingSkills[idx].skills.map((s) => s.name.toLowerCase()));
+        const merged = existingSkills[idx].skills.concat(group.skills.filter((s) => !names.has(s.name.toLowerCase())));
+        existingSkills[idx] = { ...existingSkills[idx], skills: merged };
+      }
+    });
+
+    // Add experience bullets to the first experience entry if exists, otherwise create one scaffold
+    let newExperience = [...(resumeData.experience || [])];
+    if (newExperience.length === 0) {
+      newExperience = [{ company: '', position: '', location: '', startDate: '', endDate: '', current: false, description: [...tailorSuggestions.suggestedExperienceBullets] }];
+    } else {
+      const desc = newExperience[0].description || [];
+      const dedup = new Set(desc.map((d) => d.trim().toLowerCase()));
+      const additions = tailorSuggestions.suggestedExperienceBullets.filter((b) => !dedup.has(b.trim().toLowerCase()));
+      newExperience[0] = { ...newExperience[0], description: [...desc, ...additions] };
+    }
+
+    setResumeData((prev) => ({
+      ...prev,
+      personalInfo: { ...prev.personalInfo, summary: newSummary },
+      skills: existingSkills,
+      experience: newExperience,
+    }));
+
+    // Optionally persist immediately
+    setIsSaving(true);
+    setTimeout(() => {
+      saveResumeData();
+    }, 0);
   };
 
   return (
@@ -2078,6 +2207,73 @@ export default function EditResumePage() {
                           </div>
                         </Card>
                       ))}
+                    </div>
+                  )}
+
+                  {/* Tailor to Job Section */}
+                  {activeSection === 'tailor' && (
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="job-desc">Paste Job Description</Label>
+                        <Textarea
+                          id="job-desc"
+                          placeholder="Paste the job description here to tailor your resume..."
+                          value={jobDescription}
+                          onChange={(e) => setJobDescription(e.target.value)}
+                          rows={8}
+                        />
+                        <div className="flex gap-2">
+                          <Button onClick={analyzeJobDescription}>Analyze</Button>
+                          <Button variant="outline" onClick={() => { setJobDescription(''); setTailorSuggestions(null); }}>Clear</Button>
+                        </div>
+                      </div>
+
+                      {tailorSuggestions && (
+                        <div className="space-y-4">
+                          <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                            <p className="text-sm text-blue-800"><strong>Detected Role:</strong> {tailorSuggestions.detectedProfession}</p>
+                            <p className="text-sm text-blue-800 mt-1"><strong>Keywords:</strong> {tailorSuggestions.keywords.join(', ')}</p>
+                          </div>
+
+                          <div>
+                            <h4 className="text-md font-medium mb-2">Suggested Summary</h4>
+                            <div className="p-3 border rounded-md bg-gray-50 text-sm">{tailorSuggestions.suggestedSummary}</div>
+                          </div>
+
+                          {tailorSuggestions.suggestedSkills.length > 0 && (
+                            <div>
+                              <h4 className="text-md font-medium mb-2">Suggested Skills</h4>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {tailorSuggestions.suggestedSkills.map((group, i) => (
+                                  <div key={i} className="p-3 border rounded-md">
+                                    <div className="font-medium text-sm mb-1">{group.category}</div>
+                                    <div className="flex flex-wrap gap-2 text-xs">
+                                      {group.skills.map((s, j) => (
+                                        <span key={j} className="bg-gray-100 px-2 py-1 rounded">{s.name}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {tailorSuggestions.suggestedExperienceBullets.length > 0 && (
+                            <div>
+                              <h4 className="text-md font-medium mb-2">Suggested Experience Bullets</h4>
+                              <ul className="list-disc list-inside text-sm space-y-1">
+                                {tailorSuggestions.suggestedExperienceBullets.map((b, idx) => (
+                                  <li key={idx}>{b}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          <div className="flex gap-2">
+                            <Button onClick={applyTailorSuggestions} className="bg-blue-600 hover:bg-blue-700">Apply Suggestions</Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
